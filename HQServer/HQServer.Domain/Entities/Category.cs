@@ -9,6 +9,5 @@ namespace HQServer.Domain.Entities
     {
         public int categoryID { get; set; }
         public string categoryName { get; set; }
-
     }
 }

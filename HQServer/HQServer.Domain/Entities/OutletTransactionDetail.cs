@@ -5,12 +5,12 @@ using System.Text;
 
 namespace HQServer.Domain.Entities
 {
-    public class OutletInventory
+    public class OutletTransactionDetail
     {
+        public int transactionID { get; set; }
         public int outletID { get; set; }
         public int barcode { get; set; }
-        public float sellingPrice { get; set; }
-        public int currentStock { get; set; }
-        public int minimumStock { get; set; }
+        public int unitSold { get; set; }
+        public float cost { get; set; }
     }
 }

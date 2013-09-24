@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HQServer.Domain.Entities
 {
-    public class Products
+    public class Product
     {
         public string productName { get; set; }
         public int barcode { get; set; }
@@ -17,6 +17,5 @@ namespace HQServer.Domain.Entities
         public int minimumStock { get; set; }
         public int bundleUnit { get; set; }
         public float discountPercentage { get; set; }
-
     }
 }

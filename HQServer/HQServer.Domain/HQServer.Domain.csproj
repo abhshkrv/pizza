@@ -39,6 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IOutletInventoryRepository.cs" />
+    <Compile Include="Abstract\IOutletRepository.cs" />
+    <Compile Include="Abstract\ICategoryRepository.cs" />
+    <Compile Include="Abstract\IManufacturerRepository.cs" />
+    <Compile Include="Abstract\IProductRepository.cs" />
     <Compile Include="Entities\BatchResponse.cs" />
     <Compile Include="Entities\BatchResponseDetail.cs" />
     <Compile Include="Entities\Category.cs" />
