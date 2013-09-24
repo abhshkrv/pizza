@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HQServer.WebUI", "HQServer.WebUI\HQServer.WebUI.csproj", "{9DE1FB48-4F67-4E34-AD1A-87DE58E4AC38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HQServer.Domain", "HQServer.Domain\HQServer.Domain.csproj", "{41535FF2-469F-4D07-8905-F51E7EF33283}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{9DE1FB48-4F67-4E34-AD1A-87DE58E4AC38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DE1FB48-4F67-4E34-AD1A-87DE58E4AC38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DE1FB48-4F67-4E34-AD1A-87DE58E4AC38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41535FF2-469F-4D07-8905-F51E7EF33283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41535FF2-469F-4D07-8905-F51E7EF33283}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41535FF2-469F-4D07-8905-F51E7EF33283}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41535FF2-469F-4D07-8905-F51E7EF33283}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

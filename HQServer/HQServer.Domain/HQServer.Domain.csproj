@@ -39,6 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\BatchResponse.cs" />
+    <Compile Include="Entities\BatchResponseDetail.cs" />
+    <Compile Include="Entities\Category.cs" />
+    <Compile Include="Entities\Manufacturer.cs" />
+    <Compile Include="Entities\Member.cs" />
+    <Compile Include="Entities\Outlet.cs" />
+    <Compile Include="Entities\OutletInventory.cs" />
+    <Compile Include="Entities\OutletTransaction.cs" />
+    <Compile Include="Entities\OutletTransactionDetails.cs" />
+    <Compile Include="Entities\Products.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
