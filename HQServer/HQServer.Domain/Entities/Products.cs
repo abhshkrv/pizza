@@ -9,7 +9,7 @@ namespace HQServer.Domain.Entities
     {
         public int productID { get; set; }
         public string productName { get; set; }
-        public int barcode { get; set; }
+        public string barcode { get; set; }
         public int categoryID { get; set; }
         public int manufacturerID { get; set; }
         public float costPrice { get; set; }
