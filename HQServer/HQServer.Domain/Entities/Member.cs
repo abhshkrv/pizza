@@ -15,6 +15,5 @@ namespace HQServer.Domain.Entities
         public int hpNumber { get; set; }
         public string password { get; set; }
         public int points { get; set; }
-
     }
 }

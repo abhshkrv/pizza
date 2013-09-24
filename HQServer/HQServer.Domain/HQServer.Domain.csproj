@@ -30,8 +30,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.0.2-unstable-9037\lib\net40\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -39,11 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IBatchResponseRepository.cs" />
+    <Compile Include="Abstract\IBatchResponseDetailRepository.cs" />
+    <Compile Include="Abstract\IMemberRepository.cs" />
+    <Compile Include="Abstract\IOutletTransactionDetailRepository.cs" />
+    <Compile Include="Abstract\IOutletTransactionRepository.cs" />
     <Compile Include="Abstract\IOutletInventoryRepository.cs" />
     <Compile Include="Abstract\IOutletRepository.cs" />
     <Compile Include="Abstract\ICategoryRepository.cs" />
     <Compile Include="Abstract\IManufacturerRepository.cs" />
     <Compile Include="Abstract\IProductRepository.cs" />
+    <Compile Include="Concrete\EFCategoryRepository.cs" />
+    <Compile Include="Concrete\EFManufacturerRepository.cs" />
+    <Compile Include="Concrete\EFDbContext.cs" />
+    <Compile Include="Concrete\EFProductRepository.cs" />
     <Compile Include="Entities\BatchResponse.cs" />
     <Compile Include="Entities\BatchResponseDetail.cs" />
     <Compile Include="Entities\Category.cs" />
@@ -52,9 +68,12 @@
     <Compile Include="Entities\Outlet.cs" />
     <Compile Include="Entities\OutletInventory.cs" />
     <Compile Include="Entities\OutletTransaction.cs" />
-    <Compile Include="Entities\OutletTransactionDetails.cs" />
+    <Compile Include="Entities\OutletTransactionDetail.cs" />
     <Compile Include="Entities\Products.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

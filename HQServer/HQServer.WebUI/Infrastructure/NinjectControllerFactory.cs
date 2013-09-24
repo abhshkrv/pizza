@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Ninject;
+using HQServer.Domain.Abstract;
+using HQServer.Domain.Concrete;
 
 namespace HQServer.WebUI.Infrastructure
 {
@@ -25,6 +27,9 @@ namespace HQServer.WebUI.Infrastructure
         }
         private void AddBindings()
         {
+            ninjectKernel.Bind<IProductRepository>().To<EFProductRepository>();
+            ninjectKernel.Bind<IManufacturerRepository>().To<EFManufacturerRepository>();
+            ninjectKernel.Bind<ICategoryRepository>().To<EFCategoryRepository>();
         }
     }
 }

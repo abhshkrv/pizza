@@ -10,7 +10,7 @@ namespace HQServer.Domain.Abstract
     public interface ICategoryRepository
     {
         IQueryable<Category> Categories { get; }
-        void savecategory(Category category);
-        void deletecategory(Category category);
+        void saveCategory(Category category);
+        void deleteCategory(Category category);
     }
 }
