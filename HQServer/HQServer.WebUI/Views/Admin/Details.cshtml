@@ -1,0 +1,18 @@
+﻿@model HQServer.Domain.Entities.Product
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Details</h2>
+<h4>Name :</h4>@Model.productName
+<h4>Barcode :</h4>@Model.barcode
+<h4>Category :</h4>@Model.categoryID
+<h4>Price :</h4>@Model.costPrice
+<h4>Manufacturer :</h4>@Model.manufacturerID
+<h4>Current Stock :</h4>@Model.currentStock
+<h4>Max Price :</h4>@Model.maxPrice
+<h4>Bundle Unit :</h4>@Model.bundleUnit
+<h4>Discount :</h4>@Model.discountPercentage %
+<h4>@Html.ActionLink("Return to List", "Index")</h4>

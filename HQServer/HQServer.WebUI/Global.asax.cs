@@ -1,4 +1,4 @@
-﻿using HQServer.WebUI.Controllers.Infrastructure;
+﻿using HQServer.WebUI.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;

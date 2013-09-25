@@ -8,7 +8,7 @@ using Ninject;
 using HQServer.Domain.Abstract;
 using HQServer.Domain.Concrete;
 
-namespace HQServer.WebUI.Controllers.Infrastructure
+namespace HQServer.WebUI.Infrastructure
 {
     public class NinjectControllerFactory : DefaultControllerFactory
     {
