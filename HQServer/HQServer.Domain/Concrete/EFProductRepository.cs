@@ -36,5 +36,11 @@ namespace HQServer.Domain.Concrete
             context.Products.Remove(product);
             context.SaveChanges();
         }
+
+        public void deleteTable()
+        {
+           // context.E("DELETE FROM YOURTABLE WHERE CustomerID = {0}", customerId);
+
+        }
     }
 }

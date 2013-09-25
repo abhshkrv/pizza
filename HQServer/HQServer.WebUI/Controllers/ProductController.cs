@@ -45,6 +45,7 @@ namespace HQServer.WebUI.Controllers
                 var fileName = Path.GetFileName(file.FileName);
                 var path = Path.Combine(Server.MapPath("~/Content/ProductInventory"), fileName);
                 file.SaveAs(path);
+                emptydatabase();
             }
             else
             {
@@ -62,8 +63,46 @@ namespace HQServer.WebUI.Controllers
 
         }
 
+        private void emptydatabase()
+        {
+           deleteProductTable();
+           deleteCategoryTable();
+           deleteManufactureTable();
+        }
+        
+        public void deleteProductTable()
+        {
+            var products = _productRepo.Products.Where(p=>true);
+
+            foreach (Product product in products.ToList())
+            {
+                _productRepo.deleteProduct(product);
+            }
+        }
+
+        public void deleteManufactureTable()
+        {
+            var manufacturers = _manufacturerRepo.Manufacturers.Where(m=> true);
+
+            foreach (Manufacturer manufacturer in manufacturers.ToList())
+            {
+                _manufacturerRepo.deleteManufacturer(manufacturer);
+            }
+        }
+
+        public void deleteCategoryTable()
+        {
+            var categories = _categoryRepo.Categories.Where(c=>true);
+
+            foreach (Category c in categories.ToList())
+            {
+                _categoryRepo.deleteCategory(c);
+            }
+        }
+
         private bool parseFile()
         {
+            emptydatabase();   
             string[] lines = System.IO.File.ReadAllLines(Server.MapPath(@"~/Content/ProductInventory/Inventory_100.txt"));
             List<string> inputList = lines.Cast<string>().ToList();
             foreach (string i in inputList)
@@ -90,13 +129,13 @@ namespace HQServer.WebUI.Controllers
 
         private int getCategoryID(Category category)
         {
-            Category result = _categoryRepo.Categories.First(c => c.categoryName == category.categoryName);
+            //Category result = _categoryRepo.Categories.First(c => c.categoryName == category.categoryName);
 
-            if (result != null)
+            //if (result != null)
             {
-                return result.categoryID;
+            //    return result.categoryID;
             }
-            else
+           // else
             {
                 _categoryRepo.saveCategory(category);
                 return category.categoryID;
@@ -105,13 +144,13 @@ namespace HQServer.WebUI.Controllers
 
         private int getManufacturerID(Manufacturer manufacturer)
         {
-            Manufacturer result = _manufacturerRepo.Manufacturers.First(m => m.manufacturerName == manufacturer.manufacturerName);
+            //Manufacturer result = _manufacturerRepo.Manufacturers.First(m => m.manufacturerName == manufacturer.manufacturerName);
 
-            if (result != null)
-            {
-                return result.manufacturerID;
-            }
-            else
+//            if (result != null)
+ //           {
+     //           return result.manufacturerID;
+   //         }
+       //     else
             {
                 _manufacturerRepo.saveManufacturer(manufacturer);
                 return manufacturer.manufacturerID;

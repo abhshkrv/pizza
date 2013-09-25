@@ -36,5 +36,10 @@ namespace HQServer.Domain.Concrete
             context.Manufacturers.Remove(manufacturer);
             context.SaveChanges();
         }
+
+        public void deleteTable()
+        { 
+        
+        }
     }
 }

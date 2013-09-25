@@ -7,7 +7,7 @@ namespace HQServer.Domain.Entities
 {
     public class Member
     {
-        public int membershipID { get; set; }
+        public int memberID { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string address { get; set; }

@@ -36,5 +36,10 @@ namespace HQServer.Domain.Concrete
             context.Categories.Remove(category);
             context.SaveChanges();
         }
+
+        public void deleteTable()
+        {
+           
+        }
     }
 }
