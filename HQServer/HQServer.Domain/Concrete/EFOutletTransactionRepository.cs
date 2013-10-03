@@ -2,6 +2,7 @@
 using HQServer.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -17,7 +18,13 @@ namespace HQServer.Domain.Concrete
 
         public void saveOutletTransaction(OutletTransaction outletTransaction)
         {
+            if (context.Entry(outletTransaction).State == EntityState.Detached)
+            {
+                context.OutletTransactions.Attach(outletTransaction);
+            }
 
+            context.Entry(outletTransaction).State = EntityState.Modified;
+            context.SaveChanges();
         }
 
         public void deleteOutletTransaction(OutletTransaction outletTransaction)
