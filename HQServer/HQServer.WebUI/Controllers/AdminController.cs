@@ -2,6 +2,7 @@
 using HQServer.Domain.Abstract;
 using HQServer.Domain.Entities;
 using System.Linq;
+using HQServer.WebUI.Models;
 namespace HQServer.WebUI.Controllers
 {
     [Authorize]
@@ -12,10 +13,24 @@ namespace HQServer.WebUI.Controllers
         {
             _productRepo = productRepo;
         }
-        public ViewResult Index()
-        {
-            return View(_productRepo.Products);
-        }
+        public int PageSize = 20;
+        public ViewResult Index(int page = 1) {
+            ProductsListViewModel viewModel = new ProductsListViewModel
+            {
+                Products = _productRepo.Products
+                .OrderBy(p => p.productID)
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize),
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = PageSize,
+                    TotalItems = _productRepo.Products.Count()
+                }
+            };
+
+          return View(viewModel);
+    }
         public ViewResult Edit(int productId)
         {
             Product product = _productRepo.Products.FirstOrDefault(p => p.productID == productId);

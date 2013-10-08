@@ -12,7 +12,7 @@ namespace HQServer.Domain.Abstract
         IQueryable<Product> Products { get; }
         void saveProduct(Product product);
         void deleteProduct(Product product);
-
+        
         void deleteTable();
     }
 }

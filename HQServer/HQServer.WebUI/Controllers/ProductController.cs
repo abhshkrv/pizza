@@ -39,10 +39,10 @@ namespace HQServer.WebUI.Controllers
         [HttpPost]
         public ActionResult Setup(HttpPostedFileBase file)
         {
-
+            var fileName = Path.GetFileName(file.FileName);
             if (file.ContentLength > 0)
             {
-                var fileName = Path.GetFileName(file.FileName);
+                
                 var path = Path.Combine(Server.MapPath("~/Content/ProductInventory"), fileName);
                 file.SaveAs(path);
                 emptydatabase();
@@ -52,7 +52,7 @@ namespace HQServer.WebUI.Controllers
                 return View();
             }
 
-            if (parseFile())
+            if (parseFile(fileName))
             {
                 return RedirectToAction("Index");
             }
@@ -100,10 +100,10 @@ namespace HQServer.WebUI.Controllers
             }
         }
 
-        private bool parseFile()
+        private bool parseFile(string fileName)
         {
             emptydatabase();   
-            string[] lines = System.IO.File.ReadAllLines(Server.MapPath(@"~/Content/ProductInventory/Inventory_100.txt"));
+            string[] lines = System.IO.File.ReadAllLines(Server.MapPath(@"~/Content/ProductInventory/"+fileName));
             List<string> inputList = lines.Cast<string>().ToList();
             foreach (string i in inputList)
             {

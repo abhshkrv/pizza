@@ -1,4 +1,6 @@
-﻿@model IEnumerable<HQServer.Domain.Entities.Product>
+﻿@model HQServer.WebUI.Models.ProductsListViewModel
+    
+
 
 @{
     ViewBag.Title = "Admin: All Products";
@@ -24,10 +26,11 @@
         
         <th>Actions</th>
     </tr>
-
-@foreach (var item in Model) {
+@{ int i=1;
+  foreach (var item in Model.Products) {
+    
     <tr>
-        <td>@item.productID</td>
+        <td>@i</td>
         <td>@Html.ActionLink(@item.productName, "Details",new { item.productID })</td>
         <td class="NumericCol">@item.costPrice.ToString("c")</td>
         <td >@item.currentStock</td>
@@ -39,9 +42,15 @@
         </td>
         <td>@Html.ActionLink("Edit", "Edit", new { item.productID })</td>
     </tr>
+      i++;
+}
 }
 
 </table>
 
 
 <p>@Html.ActionLink("Add a new product", "Create")</p>
+
+<div class="pager">
+@Html.PageLinks(Model.PagingInfo, x => Url.Action("Index", new {page = x}))
+</div>
