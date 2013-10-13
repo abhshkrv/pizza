@@ -4,10 +4,12 @@
 
 @{
     ViewBag.Title = "Admin: All Products";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Products</h2>
+
+<p>@Html.ActionLink("Add a new product", "Create")</p>
 
 <table class="Grid">
     <tr>
@@ -18,13 +20,14 @@
             Name
         </th>
         <th class="NumericCol">
-            costPrice
+            Cost Price
         </th>
         <th>
-            currentStock
+            Current Stock
         </th>
         
         <th>Actions</th>
+        <th></th>
     </tr>
 @{ int i=1;
   foreach (var item in Model.Products) {
@@ -48,8 +51,6 @@
 
 </table>
 
-
-<p>@Html.ActionLink("Add a new product", "Create")</p>
 
 <div class="pager">
 @Html.PageLinks(Model.PagingInfo, x => Url.Action("Index", new {page = x}))

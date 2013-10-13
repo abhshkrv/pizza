@@ -2,17 +2,48 @@
 
 @{
     ViewBag.Title = "Details";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Details</h2>
-<h4>Name :</h4>@Model.productName
-<h4>Barcode :</h4>@Model.barcode
-<h4>Category :</h4>@Model.categoryID
-<h4>Price :</h4>@Model.costPrice
-<h4>Manufacturer :</h4>@Model.manufacturerID
-<h4>Current Stock :</h4>@Model.currentStock
-<h4>Max Price :</h4>@Model.maxPrice
-<h4>Bundle Unit :</h4>@Model.bundleUnit
-<h4>Discount :</h4>@Model.discountPercentage %
+<table class="grid">
+    <tr>
+        <td><b>Name</b></td>
+        <td>@Model.productName</td>
+    </tr>
+    <tr>
+        <td><b>Barcode</b></td>
+        <td>@Model.barcode</td>
+    </tr>
+     <tr>
+        <td><b>Category</b></td>
+         <td>@Model.categoryID</td>
+     </tr>
+     <tr>
+        <td><b>Cost Price</b></td>
+         <td>@Model.costPrice</td>
+     </tr>
+     <tr>
+        <td><b>Manufacturer</b></td>
+         <td>@Model.manufacturerID</td>
+     </tr>
+     <tr>
+        <td><b>Current Stock</b></td>
+         <td>@Model.currentStock</td>
+     </tr> 
+     <tr>
+        <td><b>Maximum Price</b></td>
+         <td>@Model.maxPrice</td>
+     </tr> 
+     <tr>
+        <td><b>Bundle Unit</b></td>
+         <td>@Model.bundleUnit</td>
+     </tr> 
+     <tr>
+        <td><b>Discount percentage</b></td>
+         <td>@Model.discountPercentage %</td>
+     </tr>
+      
+ </table>       
+
 <h4>@Html.ActionLink("Return to List", "Index")</h4>
