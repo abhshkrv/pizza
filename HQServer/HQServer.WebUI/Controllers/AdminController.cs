@@ -3,6 +3,7 @@ using HQServer.Domain.Abstract;
 using HQServer.Domain.Entities;
 using System.Linq;
 using HQServer.WebUI.Models;
+using System;
 namespace HQServer.WebUI.Controllers
 {
     [Authorize]
@@ -14,7 +15,8 @@ namespace HQServer.WebUI.Controllers
             _productRepo = productRepo;
         }
         public int PageSize = 20;
-        public ViewResult Index(int page = 1) {
+        public ViewResult Index(int page = 1)
+        {
             ProductsListViewModel viewModel = new ProductsListViewModel
             {
                 Products = _productRepo.Products
@@ -29,8 +31,8 @@ namespace HQServer.WebUI.Controllers
                 }
             };
 
-          return View(viewModel);
-    }
+            return View(viewModel);
+        }
         public ViewResult Edit(int productId)
         {
             Product product = _productRepo.Products.FirstOrDefault(p => p.productID == productId);
@@ -73,5 +75,39 @@ namespace HQServer.WebUI.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public ActionResult Search()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult ProcessSearch(string name = null, string barcode = null, string manufacturer = null, string category = null)
+        {
+            ProductsListViewModel viewModel = new ProductsListViewModel();
+            String noResults = "No product found with ";
+
+            if (barcode != "" && barcode != null)
+            {
+                viewModel.Products = _productRepo.Products.Where(p => p.barcode == barcode);
+                noResults += "barcode = " + barcode;
+            }
+            else if (name != "" && name != null)
+            {
+                viewModel.Products = _productRepo.Products.Where(p => p.productName.Contains(name));
+                noResults += "Name = " + name;
+            }
+
+            if (viewModel.Products.Count() != 0)
+                return View("SearchResults", viewModel);
+            else
+            {
+                TempData["results"] = noResults;
+                return View("Search");
+            }
+
+        }
+
     }
 }
