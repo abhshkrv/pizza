@@ -4,10 +4,10 @@
 
 @{
     ViewBag.Title = "Search Results";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Search Results</h2>
 
 <table class="Grid">
     <tr>
@@ -18,13 +18,14 @@
             Name
         </th>
         <th class="NumericCol">
-            costPrice
+            Cost Price
         </th>
         <th>
-            currentStock
+            Current Stock
         </th>
         
         <th>Actions</th>
+        <th></th>
     </tr>
 @{ int i=1;
   foreach (var item in Model.Products) {
@@ -47,3 +48,4 @@
 }
 
 </table>
+<h4>@Html.ActionLink("Return to search criteria", "Search")</h4>

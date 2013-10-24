@@ -3,10 +3,18 @@
 ViewBag.Title = "Admin: Edit " + @Model.productName;
 Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h1>Edit @Model.productName</h1>
 
 @using (Html.BeginForm("Edit","Admin")) {
-@Html.EditorForModel()
-<input type="submit" value="Save" />
-@Html.ActionLink("Cancel and return to List", "Index")
+    
+        <div>
+        <fieldset>
+            <legend>Edit @Model.productName</legend>
+
+            @Html.EditorForModel()
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        </fieldset>
+    </div>
 }
+@Html.ActionLink("Cancel and return to List", "Index")

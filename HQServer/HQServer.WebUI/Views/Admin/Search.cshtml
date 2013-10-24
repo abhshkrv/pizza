@@ -3,11 +3,32 @@
 }
 
 <h2>Search</h2>
-
+<p>
+    Please enter your name or barcode.
+</p>
 <h3>@TempData["Results"]</h3>
-@using(Html.BeginForm("ProcessSearch","Admin",FormMethod.Get))
-    {
-    @Html.Label("Name", "Name"); @Html.Editor("name");<br />
-@Html.Label("Barcode", "Barcode");@Html.Editor("barcode")<br />
-  <input type="submit" value="Search" />
-    }
+@using(Html.BeginForm("ProcessSearch","Admin",FormMethod.Get)) {
+    <div>
+        <fieldset>
+            <legend>Search Information</legend>
+
+            <div class="editor-label">
+                @Html.Label("Name", "Name")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("name")
+            </div>
+
+            <div class="editor-label">
+                @Html.Label("Barcode", "Barcode")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("barcode")
+            </div>
+
+            <p>
+                <input type="submit" value="Search" />
+            </p>
+        </fieldset>
+    </div>
+}  

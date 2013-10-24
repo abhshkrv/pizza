@@ -39,7 +39,7 @@ namespace HQServer.Domain.Concrete
 
         public void deleteTable()
         {
-           // context.E("DELETE FROM YOURTABLE WHERE CustomerID = {0}", customerId);
+            context.Database.ExecuteSqlCommand("TRUNCATE TABLE PRODUCTS");
 
         }
     }

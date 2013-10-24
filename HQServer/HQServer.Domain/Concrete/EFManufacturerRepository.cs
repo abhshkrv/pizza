@@ -38,7 +38,8 @@ namespace HQServer.Domain.Concrete
         }
 
         public void deleteTable()
-        { 
+        {
+            context.Database.ExecuteSqlCommand("TRUNCATE TABLE MANUFACTURERS");
         
         }
     }

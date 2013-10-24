@@ -72,32 +72,35 @@ namespace HQServer.WebUI.Controllers
         
         public void deleteProductTable()
         {
-            var products = _productRepo.Products.Where(p=>true);
+            /*var products = _productRepo.Products.Where(p=>true);
 
             foreach (Product product in products.ToList())
             {
                 _productRepo.deleteProduct(product);
-            }
+            } */
+            _productRepo.deleteTable();
         }
 
         public void deleteManufactureTable()
         {
-            var manufacturers = _manufacturerRepo.Manufacturers.Where(m=> true);
+           /* var manufacturers = _manufacturerRepo.Manufacturers.Where(m=> true);
 
             foreach (Manufacturer manufacturer in manufacturers.ToList())
             {
                 _manufacturerRepo.deleteManufacturer(manufacturer);
-            }
+            } */
+            _manufacturerRepo.deleteTable();
         }
 
         public void deleteCategoryTable()
         {
-            var categories = _categoryRepo.Categories.Where(c=>true);
+           /* var categories = _categoryRepo.Categories.Where(c=>true);
 
             foreach (Category c in categories.ToList())
             {
                 _categoryRepo.deleteCategory(c);
-            }
+            }*/
+            _categoryRepo.deleteTable();
         }
 
         private bool parseFile(string fileName)
