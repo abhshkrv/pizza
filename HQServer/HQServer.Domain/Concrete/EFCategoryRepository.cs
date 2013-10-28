@@ -17,18 +17,37 @@ namespace HQServer.Domain.Concrete
             get { return context.Categories; }
         }
 
+        public void quickSaveCategory(Category category)
+        {
+            if (category.categoryID == 0)
+            {
+                context.Categories.Add(category);
+               // context.SaveChanges();
+            }
+            else
+            {
+                context.Entry(category).State = EntityState.Modified;
+               // context.SaveChanges();
+            }
+        }
+
         public void saveCategory(Category category)
         {
             if (category.categoryID == 0)
             {
                 context.Categories.Add(category);
-                context.SaveChanges();
+                 context.SaveChanges();
             }
             else
             {
                 context.Entry(category).State = EntityState.Modified;
                 context.SaveChanges();
             }
+        }
+
+        public void saveContext()
+        {
+            context.SaveChanges();
         }
 
         public void deleteCategory(Category category)

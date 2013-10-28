@@ -3,21 +3,10 @@ namespace HQServer.Domain.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Initial : DbMigration
+    public partial class first : DbMigration
     {
         public override void Up()
         {
-            CreateTable(
-                "dbo.BatchResponses",
-                c => new
-                    {
-                        requestID = c.Int(nullable: false, identity: true),
-                        outletID = c.Int(nullable: false),
-                        timestamp = c.DateTime(nullable: false),
-                        comments = c.String(),
-                    })
-                .PrimaryKey(t => t.requestID);
-            
             CreateTable(
                 "dbo.BatchResponseDetails",
                 c => new
@@ -29,6 +18,18 @@ namespace HQServer.Domain.Migrations
                 .PrimaryKey(t => new { t.requestID, t.barcode });
             
             CreateTable(
+                "dbo.BatchResponses",
+                c => new
+                    {
+                        requestID = c.Int(nullable: false, identity: true),
+                        outletID = c.Int(nullable: false),
+                        timestamp = c.DateTime(nullable: false),
+                        comments = c.String(),
+                        status = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.requestID);
+            
+            CreateTable(
                 "dbo.Categories",
                 c => new
                     {
@@ -36,6 +37,15 @@ namespace HQServer.Domain.Migrations
                         categoryName = c.String(),
                     })
                 .PrimaryKey(t => t.categoryID);
+            
+            CreateTable(
+                "dbo.Manufacturers",
+                c => new
+                    {
+                        manufacturerID = c.Int(nullable: false, identity: true),
+                        manufacturerName = c.String(),
+                    })
+                .PrimaryKey(t => t.manufacturerID);
             
             CreateTable(
                 "dbo.Members",
@@ -53,25 +63,6 @@ namespace HQServer.Domain.Migrations
                 .PrimaryKey(t => t.memberID);
             
             CreateTable(
-                "dbo.Manufacturers",
-                c => new
-                    {
-                        manufacturerID = c.Int(nullable: false, identity: true),
-                        manufacturerName = c.String(),
-                    })
-                .PrimaryKey(t => t.manufacturerID);
-            
-            CreateTable(
-                "dbo.Outlets",
-                c => new
-                    {
-                        outletID = c.Int(nullable: false, identity: true),
-                        owner = c.String(),
-                        address = c.String(),
-                    })
-                .PrimaryKey(t => t.outletID);
-            
-            CreateTable(
                 "dbo.OutletInventories",
                 c => new
                     {
@@ -84,14 +75,14 @@ namespace HQServer.Domain.Migrations
                 .PrimaryKey(t => new { t.outletID, t.barcode });
             
             CreateTable(
-                "dbo.OutletTransactions",
+                "dbo.Outlets",
                 c => new
                     {
-                        transactionID = c.String(nullable: false, maxLength: 128),
-                        outletID = c.Int(nullable: false),
-                        date = c.DateTime(nullable: false),
+                        outletID = c.Int(nullable: false, identity: true),
+                        owner = c.String(),
+                        address = c.String(),
                     })
-                .PrimaryKey(t => new { t.transactionID, t.outletID });
+                .PrimaryKey(t => t.outletID);
             
             CreateTable(
                 "dbo.OutletTransactionDetails",
@@ -104,6 +95,16 @@ namespace HQServer.Domain.Migrations
                         cost = c.Single(nullable: false),
                     })
                 .PrimaryKey(t => new { t.transactionID, t.outletID, t.barcode });
+            
+            CreateTable(
+                "dbo.OutletTransactions",
+                c => new
+                    {
+                        transactionID = c.String(nullable: false, maxLength: 128),
+                        outletID = c.Int(nullable: false),
+                        date = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.transactionID, t.outletID });
             
             CreateTable(
                 "dbo.Products",
@@ -128,15 +129,15 @@ namespace HQServer.Domain.Migrations
         public override void Down()
         {
             DropTable("dbo.Products");
-            DropTable("dbo.OutletTransactionDetails");
             DropTable("dbo.OutletTransactions");
-            DropTable("dbo.OutletInventories");
+            DropTable("dbo.OutletTransactionDetails");
             DropTable("dbo.Outlets");
-            DropTable("dbo.Manufacturers");
+            DropTable("dbo.OutletInventories");
             DropTable("dbo.Members");
+            DropTable("dbo.Manufacturers");
             DropTable("dbo.Categories");
-            DropTable("dbo.BatchResponseDetails");
             DropTable("dbo.BatchResponses");
+            DropTable("dbo.BatchResponseDetails");
         }
     }
 }

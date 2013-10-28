@@ -2,7 +2,9 @@
     ViewBag.Title = "Home Page";
 }
 
-<h2>@ViewBag.Message</h2>
+<h2>Welcome !</h2>
 <p>
-   <h4>View Product List</h4>
+    <h4>@Html.ActionLink("View Product List", "../Admin/Index")</h4>
+    <h4>@Html.ActionLink("Search for a Product ", "../Admin/Search")</h4>
+    <h4>@Html.ActionLink("Upload inventory file ", "../Product/Setup")</h4>
 </p>

@@ -17,6 +17,19 @@ namespace HQServer.Domain.Concrete
             get { return context.Manufacturers; }
         }
 
+        public void quickSaveManufacturer(Manufacturer manufacturer)
+        {
+            if (manufacturer.manufacturerID == 0)
+            {
+                context.Manufacturers.Add(manufacturer);
+            }
+            else
+            {
+                context.Entry(manufacturer).State = EntityState.Modified;
+
+            }
+        }
+
         public void saveManufacturer(Manufacturer manufacturer)
         {
             if (manufacturer.manufacturerID == 0)
@@ -29,6 +42,11 @@ namespace HQServer.Domain.Concrete
                 context.Entry(manufacturer).State = EntityState.Modified;
                 context.SaveChanges();
             }
+        }
+
+        public void saveContext()
+        {
+            context.SaveChanges();
         }
 
         public void deleteManufacturer(Manufacturer manufacturer)

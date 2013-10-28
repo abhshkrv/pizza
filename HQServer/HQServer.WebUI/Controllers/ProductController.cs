@@ -15,6 +15,8 @@ namespace HQServer.WebUI.Controllers
         IProductRepository _productRepo;
         ICategoryRepository _categoryRepo;
         IManufacturerRepository _manufacturerRepo;
+        int categoryCount = 0;
+        int manufacturerCount = 0;
 
         public ProductController(IProductRepository productRepo, ICategoryRepository categoryRepo, IManufacturerRepository manufacturerRepo)
         {
@@ -72,34 +74,16 @@ namespace HQServer.WebUI.Controllers
         
         public void deleteProductTable()
         {
-            /*var products = _productRepo.Products.Where(p=>true);
-
-            foreach (Product product in products.ToList())
-            {
-                _productRepo.deleteProduct(product);
-            } */
             _productRepo.deleteTable();
         }
 
         public void deleteManufactureTable()
         {
-           /* var manufacturers = _manufacturerRepo.Manufacturers.Where(m=> true);
-
-            foreach (Manufacturer manufacturer in manufacturers.ToList())
-            {
-                _manufacturerRepo.deleteManufacturer(manufacturer);
-            } */
             _manufacturerRepo.deleteTable();
         }
 
         public void deleteCategoryTable()
         {
-           /* var categories = _categoryRepo.Categories.Where(c=>true);
-
-            foreach (Category c in categories.ToList())
-            {
-                _categoryRepo.deleteCategory(c);
-            }*/
             _categoryRepo.deleteTable();
         }
 
@@ -108,56 +92,55 @@ namespace HQServer.WebUI.Controllers
             emptydatabase();   
             string[] lines = System.IO.File.ReadAllLines(Server.MapPath(@"~/Content/ProductInventory/"+fileName));
             List<string> inputList = lines.Cast<string>().ToList();
+            var manufacturersList = new Dictionary<string, int>();
+            var categoriesList = new Dictionary<string, int>();
             foreach (string i in inputList)
             {
                 string[] tokens = i.Split(':');
                 Product product = new Product();
                 product.productName = tokens[0];
-                Category category = new Category();
-                category.categoryName = tokens[1];
-                product.categoryID = getCategoryID(category);
-                Manufacturer manufacturer = new Manufacturer();
-                manufacturer.manufacturerName = tokens[2];
-                product.manufacturerID = getManufacturerID(manufacturer);
+                string categoryName = tokens[1];
+                Category category = null;
+                int categoryID;
+                if (categoriesList.ContainsKey(categoryName) == false)
+                {
+                    category = new Category();
+                    categoryID = categoriesList.Count() + 1;
+                    category.categoryName = categoryName;
+                    categoriesList.Add(categoryName, categoryID);
+                    _categoryRepo.quickSaveCategory(category);
+
+                }
+                product.categoryID = categoriesList[categoryName];
+
+                string manufacturerName = tokens[2];
+                int manufacturerID;
+                Manufacturer manufacturer=null;
+                if(manufacturersList.ContainsKey(manufacturerName)==false)       
+                {
+                   manufacturer = new Manufacturer();
+                   manufacturerID = manufacturersList.Count() + 1;
+                   manufacturer.manufacturerName = manufacturerName;
+                   manufacturersList.Add(manufacturerName,manufacturerID);
+                   _manufacturerRepo.quickSaveManufacturer(manufacturer);
+
+                }
+                product.manufacturerID = manufacturersList[manufacturerName];                  
                 product.barcode = tokens[3];
                 product.costPrice = float.Parse(tokens[4]);
                 product.currentStock = int.Parse(tokens[5]);
                 product.minimumStock = int.Parse(tokens[6]);
                 product.bundleUnit = int.Parse(tokens[7]);
 
-                _productRepo.saveProduct(product);
+                _productRepo.quickSaveProduct(product);
             }
+            
+            _manufacturerRepo.saveContext();
+            _categoryRepo.saveContext();
+            _productRepo.saveContext();
+
             return true;
         }
 
-        private int getCategoryID(Category category)
-        {
-            //Category result = _categoryRepo.Categories.First(c => c.categoryName == category.categoryName);
-
-            //if (result != null)
-            {
-            //    return result.categoryID;
-            }
-           // else
-            {
-                _categoryRepo.saveCategory(category);
-                return category.categoryID;
-            }
-        }
-
-        private int getManufacturerID(Manufacturer manufacturer)
-        {
-            //Manufacturer result = _manufacturerRepo.Manufacturers.First(m => m.manufacturerName == manufacturer.manufacturerName);
-
-//            if (result != null)
- //           {
-     //           return result.manufacturerID;
-   //         }
-       //     else
-            {
-                _manufacturerRepo.saveManufacturer(manufacturer);
-                return manufacturer.manufacturerID;
-            }
-        }
     }
 }

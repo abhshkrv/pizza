@@ -29,11 +29,11 @@
         <th>Actions</th>
         <th></th>
     </tr>
-@{ int i=1;
+@{ 
   foreach (var item in Model.Products) {
     
     <tr>
-        <td>@i</td>
+        <td>@item.productID</td>
         <td>@Html.ActionLink(@item.productName, "Details",new { item.productID })</td>
         <td class="NumericCol">@item.costPrice.ToString("c")</td>
         <td >@item.currentStock</td>
@@ -45,7 +45,7 @@
         </td>
         <td>@Html.ActionLink("Edit", "Edit", new { item.productID })</td>
     </tr>
-      i++;
+ 
 }
 }
 

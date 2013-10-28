@@ -19,5 +19,10 @@ namespace HQServer.WebUI.Controllers
         {
             return View();
         }
+
+        public ActionResult ViewProducts()
+        {
+            return View();
+        }
     }
 }

@@ -11,8 +11,9 @@ namespace HQServer.Domain.Abstract
     {
         IQueryable<Category> Categories { get; }
         void saveCategory(Category category);
+        void quickSaveCategory(Category category);
         void deleteCategory(Category category);
-
+        void saveContext();
         void deleteTable();
     }
 }

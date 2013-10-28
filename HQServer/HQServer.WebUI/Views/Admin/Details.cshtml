@@ -1,5 +1,4 @@
-﻿@model HQServer.Domain.Entities.Product
-
+﻿
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,39 +8,39 @@
 <table class="grid">
     <tr>
         <td><b>Name</b></td>
-        <td>@Model.productName</td>
+        <td>@Model.product.productName</td>
     </tr>
     <tr>
         <td><b>Barcode</b></td>
-        <td>@Model.barcode</td>
+        <td>@Model.product.barcode</td>
     </tr>
      <tr>
         <td><b>Category</b></td>
-         <td>@Model.categoryID</td>
+         <td>@Model.category.categoryName</td>
      </tr>
      <tr>
         <td><b>Cost Price</b></td>
-         <td>@Model.costPrice</td>
+         <td>@Model.product.costPrice</td>
      </tr>
      <tr>
         <td><b>Manufacturer</b></td>
-         <td>@Model.manufacturerID</td>
+         <td>@Model.manufacturer.manufacturerName</td>
      </tr>
      <tr>
         <td><b>Current Stock</b></td>
-         <td>@Model.currentStock</td>
+         <td>@Model.product.currentStock</td>
      </tr> 
      <tr>
         <td><b>Maximum Price</b></td>
-         <td>@Model.maxPrice</td>
+         <td>@Model.product.maxPrice</td>
      </tr> 
      <tr>
         <td><b>Bundle Unit</b></td>
-         <td>@Model.bundleUnit</td>
+         <td>@Model.product.bundleUnit</td>
      </tr> 
      <tr>
         <td><b>Discount percentage</b></td>
-         <td>@Model.discountPercentage %</td>
+         <td>@Model.product.discountPercentage %</td>
      </tr>
       
  </table>       

@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Create","Admin")) {
+    
+        <div>
+        <fieldset>
+            <legend>Add</legend>
+
+            <div class="editor-label">
+                @Html.Label("Name", "Name")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("name")
+            </div>
+
+            <div class="editor-label">
+                @Html.Label("Barcode", "Barcode")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("barcode")
+            </div>
+
+            <div class="editor-label">
+                @Html.Label("Category", "Category")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("categoryName")
+            </div>
+
+            <div class="editor-label">
+                @Html.Label("Manufacturer", "Manufacturer")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("manufacturerName")
+            </div>
+
+            <div class="editor-label">
+                @Html.Label("Cost Price", "Cost Price")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("costPrice")
+            </div>
+
+            <div class="editor-label">
+                @Html.Label("Current Stock", "Current Stock")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("currentStock")
+            </div>
+
+           <div class="editor-label">
+                @Html.Label("Minimum Stock", "Minimum Stock")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("minimumStock")
+            </div>
+
+            <div class="editor-label">
+                @Html.Label("Maximum Price", "Maximum Price")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("maximumPrice")
+            </div>
+
+            <div class="editor-label">
+                @Html.Label("Bundle Unit", "Bundle Unit")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("bundleUnit")
+            </div>
+
+            <div class="editor-label">
+                @Html.Label("Discount Percentage", "Discount Percentage")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("discountPercentage")
+            </div>
+
+
+
+
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        </fieldset>
+    </div>
+}
+@Html.ActionLink("Cancel and return to List", "Index")

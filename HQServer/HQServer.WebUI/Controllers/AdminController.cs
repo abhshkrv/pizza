@@ -9,12 +9,18 @@ namespace HQServer.WebUI.Controllers
     [Authorize]
     public class AdminController : Controller
     {
-        private IProductRepository _productRepo;
-        public AdminController(IProductRepository productRepo)
+        IProductRepository _productRepo;
+        ICategoryRepository _categoryRepo;
+        IManufacturerRepository _manufacturerRepo;
+
+        public AdminController(IProductRepository productRepo, ICategoryRepository categoryRepo, IManufacturerRepository manufacturerRepo)
         {
             _productRepo = productRepo;
+            _categoryRepo = categoryRepo;
+            _manufacturerRepo = manufacturerRepo;
+     
         }
-        public int PageSize = 20;
+        public int PageSize = 200;
         public ViewResult Index(int page = 1)
         {
             ProductsListViewModel viewModel = new ProductsListViewModel
@@ -53,15 +59,76 @@ namespace HQServer.WebUI.Controllers
                 return View(product);
             }
         }
-
+      
         public ViewResult Create()
         {
-            return View("Edit", new Product());
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Create(string name = null, string barcode = null, string manufacturerName = null, 
+                                   string categoryName = null, string costPrice = null, string maximumPrice=null,
+                                   string currentStock = null, string minimumStock = null, string bundleUnit = null,
+                                   string discountPercentage= null)
+        {
+            Product product = new Product();
+
+            if (ModelState.IsValid)
+            {
+                
+                product.productName = name;
+                Category category = _categoryRepo.Categories.FirstOrDefault(c => c.categoryName == categoryName);
+                if (category == null)
+                    category = new Category();
+                category.categoryName = categoryName;                
+                product.categoryID = getCategoryID(category);
+                Manufacturer manufacturer = _manufacturerRepo.Manufacturers.FirstOrDefault(m => m.manufacturerName == manufacturerName);
+                if (manufacturer == null)
+                    manufacturer = new Manufacturer();
+                manufacturer.manufacturerName = manufacturerName;
+                product.manufacturerID = getManufacturerID(manufacturer);
+                product.barcode = barcode;
+                product.costPrice = float.Parse(costPrice);
+                product.currentStock = int.Parse(currentStock);
+                product.minimumStock = int.Parse(minimumStock);
+                product.bundleUnit = int.Parse(bundleUnit);
+                product.maxPrice = float.Parse(maximumPrice);
+                product.discountPercentage = float.Parse(discountPercentage);
+                 _productRepo.saveProduct(product);
+                 _productRepo.saveContext();
+                 _manufacturerRepo.saveContext();
+                 _categoryRepo.saveContext();
+                TempData["message"] = string.Format("{0} has been saved", product.productName);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                // there is something wrong with the data values
+                return View(product);
+            }
+            
+
+        }
+
+        private int getCategoryID(Category category)
+        {
+            _categoryRepo.saveCategory(category);
+            return category.categoryID;
+        }
+
+        private int getManufacturerID(Manufacturer manufacturer)
+        {
+            _manufacturerRepo.saveManufacturer(manufacturer);
+            return manufacturer.manufacturerID;
         }
         public ViewResult Details(int productId)
         {
-            Product product = _productRepo.Products.FirstOrDefault(p => p.productID == productId);
-            return View(product);
+
+            ProductsDetailsViewModel viewModel = new ProductsDetailsViewModel();
+            viewModel.product = _productRepo.Products.FirstOrDefault(p => p.productID == productId);
+            viewModel.manufacturer = _manufacturerRepo.Manufacturers.FirstOrDefault(m =>m.manufacturerID == viewModel.product.manufacturerID);
+            viewModel.category = _categoryRepo.Categories.FirstOrDefault(c =>c.categoryID == viewModel.product.categoryID );
+
+            return View(viewModel);
         }
 
         [HttpPost]

@@ -11,8 +11,9 @@ namespace HQServer.Domain.Abstract
     {
         IQueryable<Manufacturer> Manufacturers { get; }
         void saveManufacturer(Manufacturer manufacturer);
+        void quickSaveManufacturer(Manufacturer manufacturer);
         void deleteManufacturer(Manufacturer manufacturer);
-
+        void saveContext();
         void deleteTable();
     }
 }
