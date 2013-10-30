@@ -2,6 +2,7 @@
 using HQServer.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 
@@ -17,6 +18,16 @@ namespace HQServer.Domain.Concrete
 
         public void saveOutlet(Outlet outlet)
         {
+            if (outlet.outletID == 0)
+            {
+                context.Outlets.Add(outlet);
+                context.SaveChanges();
+            }
+            else
+            {
+                context.Entry(outlet).State = EntityState.Modified;
+                context.SaveChanges();
+            }
 
         }
 

@@ -1,0 +1,23 @@
+﻿@model HQServer.Domain.Entities.Outlet
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm("Edit","Shop")) {
+    
+        <div>
+        <fieldset>
+            <legend>Edit </legend>
+
+            @Html.EditorForModel()
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        </fieldset>
+    </div>
+}
+@Html.ActionLink("Cancel and return to List", "List")

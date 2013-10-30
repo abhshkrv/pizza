@@ -16,5 +16,6 @@ namespace HQServer.Domain.Entities
         public float sellingPrice { get; set; }
         public int currentStock { get; set; }
         public int minimumStock { get; set; }
+        public int discountPercentage { get; set; }
     }
 }

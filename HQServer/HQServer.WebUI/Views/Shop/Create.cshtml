@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Create","Shop")) {
+    
+        <div>
+        <fieldset>
+            <legend>Add</legend>
+
+            <div class="editor-label">
+                @Html.Label("Owner", "Owner")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("owner")
+            </div>
+
+            <div class="editor-label">
+                @Html.Label("Address", "Address")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("address")
+            </div>
+
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        </fieldset>
+    </div>
+}
+@Html.ActionLink("Cancel and return to List", "List")

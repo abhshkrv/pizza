@@ -1,0 +1,51 @@
+﻿@model HQServer.WebUI.Models.OutletsListViewModel
+    
+
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>List</h2>
+<p>@Html.ActionLink("Add a new outlet", "Create")</p>
+
+<table class="Grid">
+    <tr>
+        <th>
+            ID
+        </th>
+        <th>
+            Owner Name
+        </th>
+        <th>
+            Address
+        </th>
+        
+        <th>Actions</th>
+        <th></th>
+    </tr>
+@{ 
+  foreach (var item in Model.Outlets) {
+    
+    <tr>
+        <td>@item.outletID</td>
+        <td>@item.owner</td>
+        <td >@item.address</td>
+        <td>
+        @using (Html.BeginForm("Delete", "Shop")) {
+        @Html.Hidden("OutletID", item.outletID)
+        <input type="submit" value="Delete"/>
+         }
+        </td>
+        <td>@Html.ActionLink("Edit", "Edit", new { item.outletID })</td>
+    </tr>
+ 
+}
+}
+
+</table>
+
+
+<div class="pager">
+@Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new {page = x}))
+</div>
