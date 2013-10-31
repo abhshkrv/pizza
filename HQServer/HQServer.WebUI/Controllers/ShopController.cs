@@ -192,11 +192,6 @@ namespace HQServer.WebUI.Controllers
             return View(viewModel);
         }
 
-        /*public ViewResult UploadTransactions()
-        {
-            return View();
-        } */
-
         [HttpPost]
         public string UploadTransactions(string input=null)
         {
@@ -231,7 +226,6 @@ namespace HQServer.WebUI.Controllers
 
         public ActionResult TransactionDetails(int transactionSummaryID)
         {
-            //int id = Int32.Parse(transactionID);
             TransactionDetailsListViewModel viewModel = new TransactionDetailsListViewModel();
             viewModel.transaction = _outletTransactionRepo.OutletTransactions.First(t => t.transactionSummaryID == transactionSummaryID);
             viewModel.TransactionDetail = _outletTransactionDetailRepo.OutletTransactionDetails.Where(td => td.transactionSummaryID == transactionSummaryID);
@@ -243,6 +237,33 @@ namespace HQServer.WebUI.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        public ActionResult ViewTransactionsForOutlet()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult TransactionsForOutlet(int outletID = 0)
+        {
+            TransactionListViewModel viewModel = new TransactionListViewModel();
+            String noResults = "No transactions found for ";
+
+            if (outletID != 0 && outletID != null)
+            {
+                viewModel.Transactions = _outletTransactionRepo.OutletTransactions.Where(t => t.outletID == outletID);
+                noResults += "outlet with ID = " + outletID;
+            }
+
+            if (viewModel.Transactions.Count() != 0)
+                return View("OutletTransactions", viewModel);
+            else
+            {
+                TempData["results"] = noResults;
+                return View("ViewTransactionsForOutlet");
+            }
+
+        }
 
     }
 }

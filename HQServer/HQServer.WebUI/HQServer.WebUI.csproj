@@ -237,6 +237,8 @@
     <Content Include="Views\Shop\ViewTransactions.cshtml" />
     <Content Include="Views\Shop\UploadTransactions.cshtml" />
     <Content Include="Views\Shop\TransactionDetails.cshtml" />
+    <Content Include="Views\Shop\ViewTransactionsForOutlet.cshtml" />
+    <Content Include="Views\Shop\OutletTransactions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
