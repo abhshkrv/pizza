@@ -192,10 +192,10 @@ namespace HQServer.WebUI.Controllers
             return View(viewModel);
         }
 
-        public ViewResult UploadTransactions()
+        /*public ViewResult UploadTransactions()
         {
             return View();
-        }
+        } */
 
         [HttpPost]
         public string UploadTransactions(string input=null)
