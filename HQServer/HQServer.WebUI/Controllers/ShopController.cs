@@ -192,10 +192,19 @@ namespace HQServer.WebUI.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
-        public ActionResult UploadTransactions(string input)
+        public ViewResult UploadTransactions()
         {
-            var i=_outletTransactionRepo.OutletTransactions.Max(t => t.transactionSummaryID)+1;
+            return View();
+        }
+
+        [HttpPost]
+        public string UploadTransactions(string input=null)
+        {
+            var i=0;
+            if (_outletTransactionRepo.OutletTransactions.Count() == 0)
+                i = 1;
+            else
+                 i=_outletTransactionRepo.OutletTransactions.Max(t => t.transactionSummaryID)+1;
             OutletTransaction outletTransaction = new OutletTransaction();
             JObject raw = JObject.Parse(input);
             outletTransaction.date = (DateTime)raw["Date"];
@@ -217,7 +226,21 @@ namespace HQServer.WebUI.Controllers
             _outletTransactionDetailRepo.saveContext();
             _outletTransactionRepo.saveOutletTransaction(outletTransaction);
 
-            return RedirectToAction("ViewTransactions");
+            return "SUCCESS";
+        }
+
+        public ActionResult TransactionDetails(int transactionSummaryID)
+        {
+            //int id = Int32.Parse(transactionID);
+            TransactionDetailsListViewModel viewModel = new TransactionDetailsListViewModel();
+            viewModel.transaction = _outletTransactionRepo.OutletTransactions.First(t => t.transactionSummaryID == transactionSummaryID);
+            viewModel.TransactionDetail = _outletTransactionDetailRepo.OutletTransactionDetails.Where(td => td.transactionSummaryID == transactionSummaryID);
+            if (viewModel.TransactionDetail.Count() == 0)
+            {
+                TempData["results"] = "Invalid transaction ID";
+                return View();
+            }
+            return View(viewModel);
         }
 
 

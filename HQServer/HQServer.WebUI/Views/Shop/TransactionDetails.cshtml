@@ -1,0 +1,53 @@
+﻿@model  HQServer.WebUI.Models.TransactionDetailsListViewModel
+
+@{
+    ViewBag.Title = "TransactionDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>TransactionDetails</h2>
+
+@if (Model == null)
+{
+    @TempData["results"];
+}
+else
+{
+<table class="grid">
+    <tr>
+        <td><b>ID</b></td>
+        <td>@Model.transaction.transactionSummaryID</td>
+    </tr>
+    <tr>
+        <td><b>Date</b></td>
+        <td>@Model.transaction.date.ToShortDateString()</td>
+    </tr>
+     <tr>
+        <td><b>OutletID</b></td>
+         <td>@Model.transaction.outletID</td>
+     </tr>
+       
+ </table>       
+
+<h3> Transaction Details :</h3>
+
+<table>
+    <tr>
+       <td> Barcode</td>
+       <td> Quantity</td>
+       <td> Price</td>
+    </tr>
+
+@foreach (var detail in @Model.TransactionDetail)
+{ 
+    <tr>
+        <td>@detail.barcode</td>
+        <td>@detail.unitSold</td>
+        <td>@detail.cost</td>
+    </tr>
+    
+}
+    </table>
+}
+
+<h4>@Html.ActionLink("View All Transactions", "ViewTransactions")</h4>

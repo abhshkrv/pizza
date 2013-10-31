@@ -19,12 +19,13 @@ namespace HQServer.Domain.Concrete
 
         public void saveOutletTransaction(OutletTransaction outletTransaction)
         {
-            if (context.Entry(outletTransaction).State == EntityState.Detached)
+           /* if (context.Entry(outletTransaction).State == EntityState.Detached)
             {
                 context.OutletTransactions.Attach(outletTransaction);
             }
 
-            context.Entry(outletTransaction).State = EntityState.Modified;
+            context.Entry(outletTransaction).State = EntityState.Modified; */
+            context.OutletTransactions.Add(outletTransaction);
             context.SaveChanges();
         }
 
