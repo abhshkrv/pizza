@@ -12,5 +12,7 @@ namespace HQServer.Domain.Abstract
         IQueryable<OutletTransactionDetail> OutletTransactionDetails { get; }
         void saveOutletTransactionDetail(OutletTransactionDetail outletTransactionDetail);
         void deleteOutletTransactionDetail(OutletTransactionDetail outletTransactionDetail);
+        void quickSaveOutletTransactionDetail(OutletTransactionDetail outletTransactionDetail);
+        void saveContext();
     }
 }

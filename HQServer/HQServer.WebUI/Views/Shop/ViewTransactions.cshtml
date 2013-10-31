@@ -1,0 +1,44 @@
+﻿
+@using System.Web.Mvc.Html; 
+@using HQServer.WebUI.HtmlHelpers
+@using HQServer.WebUI.Models
+@{
+    ViewBag.Title = "ViewTransactions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>Transactions List</h2>
+
+<table class="Grid">
+    <tr>
+        <th>
+            ID
+        </th>
+        <th>
+            Date
+        </th>
+        <th class="NumericCol">
+            Outlet ID
+        </th>
+    </tr>
+@{
+    int i=1;
+  foreach (var item in Model.Transactions) 
+  {
+      string text = item.transactionID.ToString();
+    <tr>
+        
+        <td>@Html.ActionLink(text,"TransactionDetails","Shop",new{@item.transactionID},null)</td>
+        <td>@item.date.ToShortDateString()</td>
+        <td >@item.outletID</td>
+        
+    </tr>
+    }
+      
+}
+
+<div class="pager">
+@Html.PageLinks((PagingInfo)Model.PagingInfo, x => Url.Action("List", new {page = x}))
+</div>
+

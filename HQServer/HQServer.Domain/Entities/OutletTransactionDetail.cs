@@ -10,7 +10,7 @@ namespace HQServer.Domain.Entities
     public class OutletTransactionDetail
     {
         [Key, Column(Order = 0)]
-        public int transactionID { get; set; }
+        public int transactionSummaryID { get; set; }
         [Key, Column(Order = 1)]
         public int outletID { get; set; }
         [Key, Column(Order = 2)]

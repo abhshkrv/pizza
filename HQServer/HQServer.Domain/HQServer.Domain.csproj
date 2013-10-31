@@ -38,6 +38,9 @@
       <HintPath>..\packages\EntityFramework.6.0.1\lib\net40\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="MySql.Web, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.2-unstable-9037\lib\net40\Ninject.dll</HintPath>
     </Reference>
@@ -91,6 +94,10 @@
     <Compile Include="Migrations\201310302146420_outlet.Designer.cs">
       <DependentUpon>201310302146420_outlet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201310310000080_transactionSummaryID.cs" />
+    <Compile Include="Migrations\201310310000080_transactionSummaryID.Designer.cs">
+      <DependentUpon>201310310000080_transactionSummaryID.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -104,6 +111,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201310302146420_outlet.resx">
       <DependentUpon>201310302146420_outlet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201310310000080_transactionSummaryID.resx">
+      <DependentUpon>201310310000080_transactionSummaryID.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

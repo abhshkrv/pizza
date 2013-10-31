@@ -20,6 +20,17 @@ namespace HQServer.Domain.Concrete
 
         }
 
+        public void quickSaveOutletTransactionDetail(OutletTransactionDetail outletTransactionDetail)
+        {
+            context.OutletTransactionDetails.Add(outletTransactionDetail);
+
+        }
+
+        public void saveContext()
+        {
+            context.SaveChanges();
+        }
+
         public void deleteOutletTransactionDetail(OutletTransactionDetail outletTransactionDetail)
         {
             context.OutletTransactionDetails.Remove(outletTransactionDetail);
