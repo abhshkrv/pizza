@@ -10,7 +10,9 @@ namespace HQServer.Domain.Abstract
     public interface IOutletInventoryRepository
     {
         IQueryable<OutletInventory> OutletInventories { get; }
-        void saveOutletInventory(OutletInventory outletInventory);
+        //void saveOutletInventory(OutletInventory outletInventory);
+        void quickSaveOutletInventory(OutletInventory outletInventory);
+        void saveContext();
         void deleteOutletInventory(OutletInventory outletInventory);
     }
 }

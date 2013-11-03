@@ -21,11 +21,13 @@ namespace HQServer.WebUI.Controllers
         IOutletRepository _outletRepo;
         IOutletTransactionRepository _outletTransactionRepo;
         IOutletTransactionDetailRepository _outletTransactionDetailRepo;
+        IOutletInventoryRepository _outletInventoryRepo;
 
         public ShopController(IProductRepository productRepo, ICategoryRepository categoryRepo, 
                               IManufacturerRepository manufacturerRepo, IOutletRepository outletRepo,
                               IOutletTransactionRepository outletTransactionRepo,
-                              IOutletTransactionDetailRepository outletTransactionDetailRepo)
+                              IOutletTransactionDetailRepository outletTransactionDetailRepo,
+                              IOutletInventoryRepository outletInventoryRepo)
         {
             _productRepo = productRepo;
             _categoryRepo = categoryRepo;
@@ -33,6 +35,7 @@ namespace HQServer.WebUI.Controllers
             _outletRepo = outletRepo;
             _outletTransactionRepo = outletTransactionRepo;
             _outletTransactionDetailRepo = outletTransactionDetailRepo;
+            _outletInventoryRepo = outletInventoryRepo;
         }
 
         //
@@ -224,6 +227,62 @@ namespace HQServer.WebUI.Controllers
             return "SUCCESS";
         }
 
+
+        [HttpPost]
+        public string UploadOutletInventory(string input = null)
+        {
+            var i = 0;
+
+            if (_outletInventoryRepo.OutletInventories.Count() == 0)
+                i = 1;
+            else
+                i = _outletTransactionRepo.OutletTransactions.Max(t => t.transactionSummaryID) + 1;
+            
+            JObject raw = JObject.Parse(input);
+            int outletID = (int)raw["ShopID"];
+            
+            JArray transactionArray = (JArray)raw["Inventory"];
+            OutletInventory outletInventory;
+
+            var outletInventoryList = new Dictionary<Tuple<int,int>,OutletInventory>();
+
+            foreach( var item in _outletInventoryRepo.OutletInventories)
+            {
+                Tuple<int,int> t = new Tuple<int,int>(item.outletID,item.barcode);
+                outletInventoryList.Add(t, item);
+            }
+
+           
+            foreach (var t in transactionArray)
+            {
+                int barcode = (int)t["barcode"];
+                int currentStock = (int)t["currentStock"];
+                int discountPercentage = (int)t["discount"];
+                int minimumStock = (int)t["minimumStock"];
+                float sellingPrice =(float)t["sellingPrice"];
+                
+                
+                Tuple<int,int> k = new Tuple<int,int>(outletID,barcode);
+                if (outletInventoryList.ContainsKey(k))
+                    outletInventory = outletInventoryList[k];
+                else
+                    outletInventory = new OutletInventory();
+                    
+                outletInventory.outletID = outletID;
+                outletInventory.barcode = barcode;
+                outletInventory.currentStock = currentStock;
+                outletInventory.discountPercentage = discountPercentage;
+                outletInventory.minimumStock = minimumStock;
+                outletInventory.sellingPrice = sellingPrice;
+                _outletInventoryRepo.quickSaveOutletInventory(outletInventory);
+            }
+
+            _outletInventoryRepo.saveContext();
+            return "SUCCESS";
+        }
+
+        
+
         public ActionResult TransactionDetails(int transactionSummaryID)
         {
             TransactionDetailsListViewModel viewModel = new TransactionDetailsListViewModel();
@@ -261,6 +320,55 @@ namespace HQServer.WebUI.Controllers
             {
                 TempData["results"] = noResults;
                 return View("ViewTransactionsForOutlet");
+            }
+
+        }
+
+        [HttpGet]
+        public ActionResult ViewInventoryForOutlet()
+        {
+            return View();
+        }
+
+        public ContentResult getProductDetails(string barcode)
+        {
+
+            Product p = _productRepo.Products.First(t => t.barcode == barcode);
+            Dictionary<string, object> d = new Dictionary<string, object>();
+            if (p != null)
+            {
+                d.Add("Status", "success");
+                d.Add("Product", p);
+            }
+            else
+                d.Add("Status","Fail");
+
+            var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
+            return new ContentResult()
+            {
+                Content = serializer.Serialize(d),
+                ContentType = "application/json",
+            };
+        }
+
+        [HttpGet]
+        public ActionResult InventoryForOutlet(int outletID = 0)
+        {
+            OutletInventoryViewModel viewModel = new OutletInventoryViewModel();
+            String noResults = "No inventory found for ";
+
+            if (outletID != 0 && outletID != null)
+            {
+                viewModel.Inventory = _outletInventoryRepo.OutletInventories.Where(t => t.outletID == outletID);
+                noResults += "outlet with ID = " + outletID;
+            }
+
+            if (viewModel.Inventory.Count() != 0)
+                return View("InventoryForOutlet", viewModel);
+            else
+            {
+                TempData["results"] = noResults;
+                return View("ViewInventoryForOutlet");
             }
 
         }

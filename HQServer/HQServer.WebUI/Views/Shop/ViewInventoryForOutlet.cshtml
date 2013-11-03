@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "ViewInventoryForOutlet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ViewInventoryForOutlet</h2>
+
+<p>
+    Please enter outletID
+</p>
+<h3>@TempData["Results"]</h3>
+@using (Html.BeginForm("InventoryForOutlet", "Shop", FormMethod.Get))
+{
+    <div>
+        <fieldset>
+            <legend>Outlet Information</legend>
+
+            <div class="editor-label">
+                @Html.Label("ID", "ID")
+            </div>
+            <div class="editor-field">
+                @Html.Editor("outletID")
+            </div>
+
+            <p>
+                <input type="submit" value="Search" />
+            </p>
+        </fieldset>
+    </div>
+
+}

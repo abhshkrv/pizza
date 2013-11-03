@@ -15,9 +15,15 @@ namespace HQServer.Domain.Concrete
             get { return context.OutletInventories; }
         }
 
-        public void saveOutletInventory(OutletInventory outletInventory)
+        public void quickSaveOutletInventory(OutletInventory outletInventory)
         {
+            context.OutletInventories.Add(outletInventory);
 
+        }
+
+        public void saveContext()
+        {
+            context.SaveChanges();
         }
 
         public void deleteOutletInventory(OutletInventory outletInventory)
