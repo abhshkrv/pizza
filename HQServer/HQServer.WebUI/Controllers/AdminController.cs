@@ -12,12 +12,15 @@ namespace HQServer.WebUI.Controllers
         IProductRepository _productRepo;
         ICategoryRepository _categoryRepo;
         IManufacturerRepository _manufacturerRepo;
+        IOutletInventoryRepository _outletInventoryRepo;
 
-        public AdminController(IProductRepository productRepo, ICategoryRepository categoryRepo, IManufacturerRepository manufacturerRepo)
+        public AdminController(IProductRepository productRepo, ICategoryRepository categoryRepo, IManufacturerRepository manufacturerRepo,
+                            IOutletInventoryRepository outletInventoryRepo)
         {
             _productRepo = productRepo;
             _categoryRepo = categoryRepo;
             _manufacturerRepo = manufacturerRepo;
+            _outletInventoryRepo = outletInventoryRepo;
      
         }
         public int PageSize = 200;
@@ -134,12 +137,20 @@ namespace HQServer.WebUI.Controllers
         [HttpPost]
         public ActionResult Delete(int productId)
         {
+            
             Product prod = _productRepo.Products.FirstOrDefault(p => p.productID == productId);
-            if (prod != null)
+            int bc = Int32.Parse(prod.barcode);
+            OutletInventory outletInventory = _outletInventoryRepo.OutletInventories.FirstOrDefault(o => o.barcode ==bc && o.currentStock!=0);
+            if (outletInventory == null)
             {
-                _productRepo.deleteProduct(prod);
-                TempData["message"] = string.Format("{0} was deleted", prod.productName);
+                if (prod != null)
+                {
+                    _productRepo.deleteProduct(prod);
+                    TempData["message"] = string.Format("{0} was deleted", prod.productName);
+                }
+                              
             }
+            else TempData["message"] = "Item in production";
             return RedirectToAction("Index");
         }
 

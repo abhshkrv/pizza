@@ -1,0 +1,36 @@
+﻿@using System.Web.Mvc.Html; 
+@using HQServer.WebUI.HtmlHelpers
+@using HQServer.WebUI.Models
+
+@{
+    ViewBag.Title = "OutletTransactions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>OutletTransactions</h2>
+
+<table class="Grid">
+    <tr>
+
+        <th>
+            Date
+        </th>
+
+        <th>
+            Transaction ID
+        </th>
+
+    </tr>
+@{ 
+  foreach (var item in Model.Transactions) {
+      string text = item.transactionSummaryID.ToString();
+    <tr>
+        <td>@item.date</td>
+        <td>@Html.ActionLink(text, "TransactionDetails","Shop",new {item.transactionSummaryID},null)</td>
+      
+    </tr>
+ 
+}
+}
+
+</table>
+<h4>@Html.ActionLink("Return to search criteria", "ViewTransactionsForOutlet")</h4>

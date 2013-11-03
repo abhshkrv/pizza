@@ -117,6 +117,7 @@
     <Compile Include="HtmlHelpers\PagingHelpers.cs" />
     <Compile Include="Infrastructure\NinjectControllerFactory.cs" />
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\OutletInventoryViewModel.cs" />
     <Compile Include="Models\OutletsListViewModel.cs" />
     <Compile Include="Models\PagingInfo.cs" />
     <Compile Include="Models\ProductsDetailsViewModel.cs" />
@@ -235,8 +236,12 @@
     <Content Include="Views\Shop\List.cshtml" />
     <Content Include="Views\Shop\Edit.cshtml" />
     <Content Include="Views\Shop\ViewTransactions.cshtml" />
-    <Content Include="Views\Shop\UploadTransactions.cshtml" />
+    <Content Include="Views\Shop\UploadOutletInventory.cshtml" />
     <Content Include="Views\Shop\TransactionDetails.cshtml" />
+    <Content Include="Views\Shop\ViewTransactionsForOutlet.cshtml" />
+    <Content Include="Views\Shop\OutletTransactions.cshtml" />
+    <Content Include="Views\Shop\ViewInventoryForOutlet.cshtml" />
+    <Content Include="Views\Shop\InventoryForOutlet.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

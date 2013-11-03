@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "InventoryForOutlet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>InventoryForOutlet</h2>
+<table class="Grid">
+    <tr>
+
+        <th>
+            Barcode
+        </th>
+
+        <th>
+            Selling Price
+        </th>
+
+        <th>
+            Cur stock
+        </th>
+        <th>
+            Min stock
+        </th>
+        <th>
+            discount
+        </th>
+
+    </tr>
+@{ 
+  foreach (var item in Model.Inventory) {
+    
+    <tr>
+        <td>@item.barcode</td>
+        <td>@item.sellingPrice</td>
+        <td>@item.currentStock</td>
+        <td>@item.minimumStock</td>
+        <td>@item.discountPercentage</td>
+        
+      
+    </tr>
+ 
+}
+}
+
+</table>
+<h4>@Html.ActionLink("Return to search criteria", "ViewInventoryForOutlet")</h4>
