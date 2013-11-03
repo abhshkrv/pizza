@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace HQServer.WebUI.Controllers
 {
@@ -140,6 +141,22 @@ namespace HQServer.WebUI.Controllers
             _productRepo.saveContext();
 
             return true;
+        }
+
+        public ContentResult getProductDetails(string barcode)
+        {
+            Product p = _productRepo.Products.First(t => t.barcode == barcode);
+            Dictionary<string, object> output = new Dictionary<string, object>();
+            output.Add("Product", p);
+
+            var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
+
+
+            return new ContentResult()
+            {
+                Content = serializer.Serialize(output),
+                ContentType = "application/json",
+            };
         }
 
     }

@@ -21,11 +21,12 @@ namespace HQServer.WebUI.Controllers
         IOutletRepository _outletRepo;
         IOutletTransactionRepository _outletTransactionRepo;
         IOutletTransactionDetailRepository _outletTransactionDetailRepo;
+        IOutletInventoryRepository _outletInventoryRepo;
 
         public ShopController(IProductRepository productRepo, ICategoryRepository categoryRepo, 
                               IManufacturerRepository manufacturerRepo, IOutletRepository outletRepo,
                               IOutletTransactionRepository outletTransactionRepo,
-                              IOutletTransactionDetailRepository outletTransactionDetailRepo)
+                              IOutletTransactionDetailRepository outletTransactionDetailRepo, IOutletInventoryRepository invRepo)
         {
             _productRepo = productRepo;
             _categoryRepo = categoryRepo;
@@ -33,6 +34,7 @@ namespace HQServer.WebUI.Controllers
             _outletRepo = outletRepo;
             _outletTransactionRepo = outletTransactionRepo;
             _outletTransactionDetailRepo = outletTransactionDetailRepo;
+            _outletInventoryRepo = invRepo;
         }
 
         //
@@ -241,6 +243,58 @@ namespace HQServer.WebUI.Controllers
                 return View();
             }
             return View(viewModel);
+        }
+
+        public ContentResult getNewPrices(string shopID, string date)
+        {
+            DateTime dt = DateTime.Parse(date);
+            int id = Int32.Parse(shopID);
+            var tid = _outletTransactionRepo.OutletTransactions.First(o => o.outletID == id && dt.Day==o.date.Day&&dt.Month==o.date.Month&&dt.Year==o.date.Year).transactionSummaryID;
+           
+            var outletTransactionDetails = _outletTransactionDetailRepo.OutletTransactionDetails.Where(o => o.outletID == tid).ToDictionary(t=>t.barcode);
+            var shopinventory = _outletInventoryRepo.OutletInventories.Where(o => o.outletID == id).ToList();
+            var productDetails = _productRepo.Products.ToDictionary(p=>p.barcode);
+
+            Dictionary<int,float> priceList = new Dictionary<int,float>();
+
+            foreach (var product in shopinventory)
+            {
+                float newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, outletTransactionDetails[product.barcode].unitSold,0,2*product.currentStock,productDetails[product.barcode.ToString()].costPrice);
+                priceList.Add(product.barcode, newPrice);
+            }
+
+           
+            var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
+            return new ContentResult()
+            {
+                Content = serializer.Serialize(priceList),
+                ContentType = "application/json",
+            };
+        }
+
+        public float activePrice(float cur_selling_price, int curr_qty, int threshold, int units_sold, float global_sales_value, int max_stock, float cost_price)
+        {
+            global_sales_value = units_sold * cur_selling_price * 0.5f;
+            float new_selling_price;
+            float value_quo = cur_selling_price * units_sold / global_sales_value;
+
+            if (curr_qty < 1.1 * threshold)
+                new_selling_price = 2 * cost_price;
+
+            else if (curr_qty < 1.5 * threshold)
+            {
+                new_selling_price = cur_selling_price + value_quo * cur_selling_price;
+            }
+
+            else if (curr_qty >= 0.9 * max_stock)
+            {
+                new_selling_price = cur_selling_price - value_quo * cur_selling_price;
+            }
+            else
+            {
+                new_selling_price = cur_selling_price - value_quo * value_quo * cur_selling_price;
+            }
+            return new_selling_price;
         }
 
 
