@@ -236,7 +236,6 @@
     <Content Include="Views\Shop\List.cshtml" />
     <Content Include="Views\Shop\Edit.cshtml" />
     <Content Include="Views\Shop\ViewTransactions.cshtml" />
-    <Content Include="Views\Shop\UploadOutletInventory.cshtml" />
     <Content Include="Views\Shop\TransactionDetails.cshtml" />
     <Content Include="Views\Shop\ViewTransactionsForOutlet.cshtml" />
     <Content Include="Views\Shop\OutletTransactions.cshtml" />
