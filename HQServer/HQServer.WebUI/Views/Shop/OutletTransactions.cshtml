@@ -24,7 +24,7 @@
   foreach (var item in Model.Transactions) {
       string text = item.transactionSummaryID.ToString();
     <tr>
-        <td>@item.date</td>
+        <td>@item.date.ToShortDateString()</td>
         <td>@Html.ActionLink(text, "TransactionDetails","Shop",new {item.transactionSummaryID},null)</td>
       
     </tr>
