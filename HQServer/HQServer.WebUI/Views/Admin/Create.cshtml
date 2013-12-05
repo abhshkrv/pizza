@@ -4,88 +4,113 @@
 }
 
 @using (Html.BeginForm("Create","Admin")) {
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-10 col-md-offset-1">
+            <div class="span8">
+                <form action="billing" method="post" class="form-horizontal" id="billingform" accept-charset="utf-8">
+                    <div class="control-group">
+                        <label for="name" class="control-label">
+                            Name
+                        </label>
+                        <div class="controls">
+                            <input name="name" type="text" value="" id="name">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="barcode" class="control-label">
+                            Barcode
+                        </label>
+                        <div class="controls">
+                            <input name="barcode" type="text" value="" id="barcode">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="categoryName" class="control-label">
+                            Category name
+                        </label>
+                        <div class="controls">
+                            <input name="categoryName" type="text" value="" id="categoryName">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="manufacturerName" class="control-label">
+                            Manufacturer name
+                        </label>
+                        <div class="controls">
+                            <input name="manufacturerName" type="text" value="" id="manufacturerName">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="costPrice" class="control-label">
+                            Cost Price
+                        </label>
+                        <div class="controls">
+                            <input name="costPrice" type="text" value="" id="costPrice">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="currentStock" class="control-label">
+                            Current stock
+                        </label>
+                        <div class="controls">
+                            <input name="currentStock" type="text" value="" id="currentStock">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="minimumStock" class="control-label">
+                            Minimum stock
+                        </label>
+                        <div class="controls">
+                            <input name="minimumStock" type="text" value="" id="minimumStock">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="maximumPrice" class="control-label">
+                            Maximum price
+                        </label>
+                        <div class="controls">
+                            <input name="maximumPrice" type="text" value="" id="maximumPrice">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="bundleUnit" class="control-label">
+                            Bundle unit
+                        </label>
+                        <div class="controls">
+                            <input name="bundleUnit" type="text" value="" id="bundleUnit">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="discountPercentage" class="control-label">
+                            Discount percentage
+                        </label>
+                        <div class="controls">
+                            <input name="discountPercentage" type="text" value="" id="discountPercentage">
+                        </div>
+                    </div>
+
+                    <p></p>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Product</button>
+                        <a href="@Url.Action("Index")" class="btn btn btn-danger">Cancel and return to list</a>
+                    </div>
+                </form>
+            </div> <!-- .span8 -->
+        </div>
+        </div>
+</div>
     
-        <div>
-        <fieldset>
-            <legend>Add</legend>
-
-            <div class="editor-label">
-                @Html.Label("Name", "Name")
-            </div>
-            <div class="editor-field">
-                @Html.Editor("name")
-            </div>
-
-            <div class="editor-label">
-                @Html.Label("Barcode", "Barcode")
-            </div>
-            <div class="editor-field">
-                @Html.Editor("barcode")
-            </div>
-
-            <div class="editor-label">
-                @Html.Label("Category", "Category")
-            </div>
-            <div class="editor-field">
-                @Html.Editor("categoryName")
-            </div>
-
-            <div class="editor-label">
-                @Html.Label("Manufacturer", "Manufacturer")
-            </div>
-            <div class="editor-field">
-                @Html.Editor("manufacturerName")
-            </div>
-
-            <div class="editor-label">
-                @Html.Label("Cost Price", "Cost Price")
-            </div>
-            <div class="editor-field">
-                @Html.Editor("costPrice")
-            </div>
-
-            <div class="editor-label">
-                @Html.Label("Current Stock", "Current Stock")
-            </div>
-            <div class="editor-field">
-                @Html.Editor("currentStock")
-            </div>
-
-           <div class="editor-label">
-                @Html.Label("Minimum Stock", "Minimum Stock")
-            </div>
-            <div class="editor-field">
-                @Html.Editor("minimumStock")
-            </div>
-
-            <div class="editor-label">
-                @Html.Label("Maximum Price", "Maximum Price")
-            </div>
-            <div class="editor-field">
-                @Html.Editor("maximumPrice")
-            </div>
-
-            <div class="editor-label">
-                @Html.Label("Bundle Unit", "Bundle Unit")
-            </div>
-            <div class="editor-field">
-                @Html.Editor("bundleUnit")
-            </div>
-
-            <div class="editor-label">
-                @Html.Label("Discount Percentage", "Discount Percentage")
-            </div>
-            <div class="editor-field">
-                @Html.Editor("discountPercentage")
-            </div>
-
-
-
-
-            <p>
-                <input type="submit" value="Save" />
-            </p>
-        </fieldset>
-    </div>
 }
-@Html.ActionLink("Cancel and return to List", "Index")
+
+

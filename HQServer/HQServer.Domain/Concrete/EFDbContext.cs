@@ -20,6 +20,8 @@ namespace HQServer.Domain.Concrete
         public DbSet<OutletInventory> OutletInventories { get; set; }
         public DbSet<OutletTransaction> OutletTransactions { get; set; }
         public DbSet<OutletTransactionDetail> OutletTransactionDetails { get; set; }
+        public DbSet<OnlineTransaction> Transactions { get; set; }
+        public DbSet<OnlineTransactionDetail> TransactionDetails { get; set; }
         public DbSet<Product> Products { get; set; }
     }
 }

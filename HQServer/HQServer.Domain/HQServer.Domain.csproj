@@ -63,6 +63,8 @@
     <Compile Include="Abstract\IBatchResponseRepository.cs" />
     <Compile Include="Abstract\IBatchResponseDetailRepository.cs" />
     <Compile Include="Abstract\IMemberRepository.cs" />
+    <Compile Include="Abstract\IOnlineTransactionRepository.cs" />
+    <Compile Include="Abstract\IOnlineTransactionDetailRepository.cs" />
     <Compile Include="Abstract\IOutletTransactionDetailRepository.cs" />
     <Compile Include="Abstract\IOutletTransactionRepository.cs" />
     <Compile Include="Abstract\IOutletInventoryRepository.cs" />
@@ -76,6 +78,8 @@
     <Compile Include="Concrete\EFDbContext.cs" />
     <Compile Include="Concrete\EFManufacturerRepository.cs" />
     <Compile Include="Concrete\EFMemberRepository.cs" />
+    <Compile Include="Concrete\EFOnlineTransactionDetailRepository.cs" />
+    <Compile Include="Concrete\EFOnlineTransactionRepository.cs" />
     <Compile Include="Concrete\EFOutletInventoryRepository.cs" />
     <Compile Include="Concrete\EFOutletRepository.cs" />
     <Compile Include="Concrete\EFOutletTransactionDetailRepository.cs" />
@@ -83,9 +87,12 @@
     <Compile Include="Concrete\EFProductRepository.cs" />
     <Compile Include="Entities\BatchResponse.cs" />
     <Compile Include="Entities\BatchResponseDetail.cs" />
+    <Compile Include="Entities\Cart.cs" />
     <Compile Include="Entities\Category.cs" />
     <Compile Include="Entities\Manufacturer.cs" />
     <Compile Include="Entities\Member.cs" />
+    <Compile Include="Entities\OnlineTransaction.cs" />
+    <Compile Include="Entities\OnlineTransactionDetails.cs" />
     <Compile Include="Entities\Outlet.cs" />
     <Compile Include="Entities\OutletInventory.cs" />
     <Compile Include="Entities\OutletTransaction.cs" />
@@ -103,6 +110,10 @@
     <Compile Include="Migrations\201310310000080_transactionSummaryID.Designer.cs">
       <DependentUpon>201310310000080_transactionSummaryID.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201312051542169_onlineshopping.cs" />
+    <Compile Include="Migrations\201312051542169_onlineshopping.Designer.cs">
+      <DependentUpon>201312051542169_onlineshopping.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -119,6 +130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201310310000080_transactionSummaryID.resx">
       <DependentUpon>201310310000080_transactionSummaryID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312051542169_onlineshopping.resx">
+      <DependentUpon>201312051542169_onlineshopping.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

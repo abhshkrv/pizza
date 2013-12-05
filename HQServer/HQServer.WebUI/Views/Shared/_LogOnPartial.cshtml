@@ -1,7 +1,23 @@
-﻿@if(Request.IsAuthenticated) {
-    <text>Welcome <strong>@User.Identity.Name</strong>!
-    [ @Html.ActionLink("Log Off", "LogOff", "Account") ]</text>
+﻿@if (Request.IsAuthenticated)
+{
+    <strong style="color:white"> Welcome @User.Identity.Name !</strong>
+    <button type="button" class="btn btn-danger" onclick=proceedToLogout()>
+        LogOut
+    </button>
 }
-else {
-    @:[ @Html.ActionLink("Log On", "LogOn", "Account") ]
+else
+{
+    <button type="button" class="btn btn-success" onclick=proceedToLogin()>
+        Login
+    </button>
 }
+
+<script>
+    function proceedToLogin() {
+        window.location.href = "@Url.Action("LogOn","Account")";
+    }
+
+    function proceedToLogout() {
+        window.location.href = "@Url.Action("LogOff","Account")";
+    }
+</script>

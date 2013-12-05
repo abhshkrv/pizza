@@ -1,0 +1,19 @@
+﻿@model HQServer.Domain.Entities.Manufacturer
+@{
+    ViewBag.Title = "EditManufacturer";
+}
+
+<h2>EditManufacturer</h2>
+@using (Html.BeginForm("EditManufacturer", "Admin"))
+{
+        <div>
+        <fieldset>
+            <legend>Edit @Model.</legend>
+
+            @Html.EditorForModel()
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        </fieldset>
+    </div>
+}

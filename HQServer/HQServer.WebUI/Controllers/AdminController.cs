@@ -133,14 +133,13 @@ namespace HQServer.WebUI.Controllers
 
             return View(viewModel);
         }
-
         [HttpPost]
         public ActionResult Delete(int productId)
         {
-            
+
             Product prod = _productRepo.Products.FirstOrDefault(p => p.productID == productId);
             int bc = Int32.Parse(prod.barcode);
-            OutletInventory outletInventory = _outletInventoryRepo.OutletInventories.FirstOrDefault(o => o.barcode ==bc && o.currentStock!=0);
+            OutletInventory outletInventory = _outletInventoryRepo.OutletInventories.FirstOrDefault(o => o.barcode == bc && o.currentStock != 0);
             if (outletInventory == null)
             {
                 if (prod != null)
@@ -148,10 +147,97 @@ namespace HQServer.WebUI.Controllers
                     _productRepo.deleteProduct(prod);
                     TempData["message"] = string.Format("{0} was deleted", prod.productName);
                 }
-                              
+
             }
             else TempData["message"] = "Item in production";
             return RedirectToAction("Index");
+        }
+
+
+/* CRUD for manufacturers */
+
+        public ViewResult AddManufacturer()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddManufacturer(string manufacturerName = null)
+        {
+            Manufacturer manufacturer = new Manufacturer();
+
+            if (ModelState.IsValid)
+            {                
+                manufacturer.manufacturerName = manufacturerName;
+                _manufacturerRepo.saveManufacturer(manufacturer);
+                TempData["message"] = string.Format("{0} has been saved", manufacturer.manufacturerName);
+                return RedirectToAction("ManufacturersList");
+            }
+            else
+            {
+                // there is something wrong with the data values
+                return View(manufacturer);
+            }
+
+
+        }
+        
+        public ViewResult ManufacturersList(int page = 1)
+        {
+            ManufacturersListViewModel viewModel = new ManufacturersListViewModel
+            {
+                Manufacturers = _manufacturerRepo.Manufacturers
+                .OrderBy(m => m.manufacturerID)
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize),
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = PageSize,
+                    TotalItems = _manufacturerRepo.Manufacturers.Count()
+                }
+            };
+
+            return View(viewModel);
+        }
+
+        public ViewResult EditManufacturer(int manufacturerId)
+        {
+            Manufacturer manufacturer = _manufacturerRepo.Manufacturers.FirstOrDefault(m=>m.manufacturerID == manufacturerId);
+            return View(manufacturer);
+        }
+        [HttpPost]
+        public ActionResult EditManufacturer(Manufacturer manufacturer)
+        {
+            if (ModelState.IsValid)
+            {
+                _manufacturerRepo.saveManufacturer(manufacturer);
+                TempData["message"] = string.Format("{0} has been saved", manufacturer.manufacturerName);
+                return RedirectToAction("ManufacturersList");
+            }
+            else
+            {
+                // there is something wrong with the data values
+                return View(manufacturer);
+            }
+        }
+        [HttpPost]
+        public ActionResult DeleteManufacturer(int manufacturerId)
+        {
+
+            Manufacturer manufacturer = _manufacturerRepo.Manufacturers.FirstOrDefault(m => m.manufacturerID == manufacturerId);
+//OutletInventory outletInventory = _outletInventoryRepo.OutletInventories.FirstOrDefault(o => o.barcode ==bc && o.currentStock!=0);
+           // if (outletInventory == null)
+            //{
+                if (manufacturer != null)
+                {
+                    _manufacturerRepo.deleteManufacturer(manufacturer);
+                    TempData["message"] = string.Format("{0} was deleted", manufacturer.manufacturerName);
+                }
+                              
+           // }
+           // else TempData["message"] = "Item in production";
+            return RedirectToAction("ManufacturersList");
         }
 
         [HttpGet]

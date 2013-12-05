@@ -1,0 +1,61 @@
+﻿@model HQServer.WebUI.Models.ManufacturersListViewModel
+    
+
+@{
+    ViewBag.Title = "Admin: All Manufactures";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-sm-12 col-md-10 col-md-offset-1">
+    <div class="row">
+        <h2>Manufacturers</h2>
+        <h2>@TempData["message"]</h2>
+        <p></p>
+        <a href="@Url.Action("AddManufacturer")" class="btn btn-primary">Add Manufacturer</a>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th class="text-center">Name</th>
+                    <th class="text-center"> Actions </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @{
+                    foreach (var item in Model.Manufacturers)
+                    {
+
+                        <tr>
+                            <td class="col-sm-1 col-md-1">
+                                @item.manufacturerID
+                            </td>
+                            <td class="col-sm-2 col-md-2" style="text-align: center">
+                                @item.manufacturerName
+                            </td>
+                            <td class="col-sm-1 col-md-1">
+                                @using (Html.BeginForm("DeleteManufacturer", "Admin"))
+                                {
+                                    @Html.Hidden("ManufacturerID", item.manufacturerID)
+                                    <button type="submit" class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                }
+
+                            </td>
+                            <td class="col-sm-1 col-md-1">
+                                <a href="@Url.Action("EditManufacturer", new {item.manufacturerID})" class="btn btn-success"><i class="glyphicon glyphicon-pencil"></i></a>
+                            </td>
+                        </tr>
+
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="pager">
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("ManufacturersList", new { page = x }))
+</div>

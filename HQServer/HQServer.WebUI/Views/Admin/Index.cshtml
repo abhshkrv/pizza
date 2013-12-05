@@ -1,5 +1,5 @@
 ﻿@model HQServer.WebUI.Models.ProductsListViewModel
-    
+
 
 
 @{
@@ -7,53 +7,68 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Products</h2>
+<div class="col-sm-12 col-md-10 col-md-offset-1">
+    <div class="row">
+        <h2>Products</h2>
+        <h2>@TempData["message"]</h2>
+        <p></p>
+        <a href="@Url.Action("Create")" class="btn btn-primary">Add Product</a>
 
-<h2>@TempData["message"]</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th class="text-center">NAME</th>
+                    <th class="text-center">Cost Price</th>
+                    <th class="text-center">Current Stock</th>
+                    <th class="text-center"> Actions </th>
+                </tr>
+            </thead>
+            <tbody>
 
-<p>@Html.ActionLink("Add a new product", "Create")</p>
+                @{
+                    foreach (var item in Model.Products)
+                    {
 
-<table class="Grid">
-    <tr>
-        <th>
-            ID
-        </th>
-        <th>
-            Name
-        </th>
-        <th class="NumericCol">
-            Cost Price
-        </th>
-        <th>
-            Current Stock
-        </th>
-        
-        <th>Actions</th>
-        <th></th>
-    </tr>
-@{ 
-  foreach (var item in Model.Products) {
-    
-    <tr>
-        <td>@item.productID</td>
-        <td>@Html.ActionLink(@item.productName, "Details",new { item.productID })</td>
-        <td class="NumericCol">@item.costPrice.ToString("c")</td>
-        <td >@item.currentStock</td>
-        <td>
-        @using (Html.BeginForm("Delete", "Admin")) {
-        @Html.Hidden("ProductID", item.productID)
-        <input type="submit" value="Delete"/>
-         }
-        </td>
-        <td>@Html.ActionLink("Edit", "Edit", new { item.productID })</td>
-    </tr>
- 
-}
-}
+                        <tr>
+                            <td class="col-sm-1 col-md-1">
+                                @item.productID
+                            </td>
+                            <td class="col-sm-3 col-md-3" style="text-align: center">
+                                @Html.ActionLink(@item.productName, "Details", new { item.productID })
+                            </td>
+                            <td class="col-sm-1 col-md-1 text-center"><strong>@item.costPrice.ToString("c")</strong></td>
+                            <td class="col-sm-1 col-md-1 text-center"><strong>@item.currentStock</strong></td>
+                            <td class="col-sm-1 col-md-1">
+                                @using (Html.BeginForm("Delete", "Admin"))
+                                {
+                                    @Html.Hidden("ProductID", item.productID)
+                                    <button type="submit" class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                }
 
-</table>
+                            </td>
+                            <td class="col-sm-1 col-md-1">
+                                <a href="@Url.Action("Edit", new {item.productID})" class="btn btn-success"><i class="glyphicon glyphicon-pencil"></i></a>
+                            </td>
+                        </tr>
+
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
 
 
 <div class="pager">
-@Html.PageLinks(Model.PagingInfo, x => Url.Action("Index", new {page = x}))
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("Index", new { page = x }))
 </div>
