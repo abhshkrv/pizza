@@ -28,7 +28,11 @@ namespace HQServer.WebUI.Controllers
             if (product == null)
             {
                 ViewBag["Result"] = "Error";
-                return View();
+                return new ContentResult()
+                {
+                    Content = "{Status:Fail}",
+                    ContentType = "application/json",
+                };
             }
             else
             {
@@ -43,9 +47,11 @@ namespace HQServer.WebUI.Controllers
                 batchResponseDetail.barcode = Int32.Parse(barcode);
                 batchResponseDetail.quantity = Int32.Parse(qty);
 
-
-
-                return View();
+                return new ContentResult()
+                {
+                    Content = "{Status:Success}",
+                    ContentType = "application/json",
+                };
             }
         }
 
