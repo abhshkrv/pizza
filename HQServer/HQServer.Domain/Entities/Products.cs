@@ -16,8 +16,8 @@ namespace HQServer.Domain.Entities
         public string barcode { get; set; }
         public int categoryID { get; set; }
         public int manufacturerID { get; set; }
-        public float costPrice { get; set; }
-        public float maxPrice { get; set; }
+        public double costPrice { get; set; }
+        public double maxPrice { get; set; }
         public int currentStock { get; set; }
         public int minimumStock { get; set; }
         public int bundleUnit { get; set; }

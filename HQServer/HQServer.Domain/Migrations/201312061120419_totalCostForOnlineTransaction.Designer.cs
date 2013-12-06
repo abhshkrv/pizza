@@ -7,13 +7,13 @@ namespace HQServer.Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.0.1-21010")]
-    public sealed partial class transactionSummaryID : IMigrationMetadata
+    public sealed partial class totalCostForOnlineTransaction : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(transactionSummaryID));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(totalCostForOnlineTransaction));
         
         string IMigrationMetadata.Id
         {
-            get { return "201310310000080_transactionSummaryID"; }
+            get { return "201312061120419_totalCostForOnlineTransaction"; }
         }
         
         string IMigrationMetadata.Source

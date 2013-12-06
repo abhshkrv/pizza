@@ -215,7 +215,7 @@ namespace HQServer.WebUI.Controllers
             {
                 OutletTransactionDetail outletTransactionDetail = new OutletTransactionDetail();
                 outletTransactionDetail.transactionSummaryID = outletTransaction.transactionSummaryID;
-                outletTransactionDetail.barcode = (int)t["Key"];
+                outletTransactionDetail.barcode = (string)t["Key"];
                 outletTransactionDetail.unitSold = (int)t["Value"]["quantity"];
                 outletTransactionDetail.cost = (float)t["Value"]["unitPrice"];
                 _outletTransactionDetailRepo.quickSaveOutletTransactionDetail(outletTransactionDetail);
@@ -244,25 +244,25 @@ namespace HQServer.WebUI.Controllers
             JArray transactionArray = (JArray)raw["Inventory"];
             OutletInventory outletInventory;
 
-            var outletInventoryList = new Dictionary<Tuple<int, int>, OutletInventory>();
+            var outletInventoryList = new Dictionary<Tuple<int, string>, OutletInventory>();
 
             foreach (var item in _outletInventoryRepo.OutletInventories)
             {
-                Tuple<int, int> t = new Tuple<int, int>(item.outletID, item.barcode);
+                Tuple<int, string> t = new Tuple<int, string>(item.outletID, item.barcode);
                 outletInventoryList.Add(t, item);
             }
 
 
             foreach (var t in transactionArray)
             {
-                int barcode = (int)t["barcode"];
+                string barcode = (string)t["barcode"];
                 int currentStock = (int)t["currentStock"];
                 int discountPercentage = (int)t["discount"];
                 int minimumStock = (int)t["minimumStock"];
                 float sellingPrice = (float)t["sellingPrice"];
 
 
-                Tuple<int, int> k = new Tuple<int, int>(outletID, barcode);
+                Tuple<int, string> k = new Tuple<int, string>(outletID, barcode);
                 if (outletInventoryList.ContainsKey(k))
                     outletInventory = outletInventoryList[k];
                 else
@@ -383,17 +383,17 @@ namespace HQServer.WebUI.Controllers
             var inventory = _outletInventoryRepo.OutletInventories.ToDictionary(s =>(s.outletID.ToString()+s.barcode.ToString()));
             var productDetails = _productRepo.Products.ToDictionary(p => p.barcode);
 
-            Dictionary<int, float> priceList = new Dictionary<int, float>();
+            Dictionary<string, double> priceList = new Dictionary<string, double>();
 
             foreach (var product in shopinventory)
             {
-                float value = 0;
+                double value = 0;
                 foreach (var shop in _outletRepo.Outlets)
                 {
                     var item = _outletTransactionDetailRepo.OutletTransactionDetails.Where(o => o.outletID == shop.outletID&&o.barcode==product.barcode).First();
                     value = value + item.cost;
                 }
-                float newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, outletTransactionDetails[product.barcode].unitSold, 0, 2 * product.minimumStock, productDetails[product.barcode.ToString()].costPrice);
+                double newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, outletTransactionDetails[product.barcode].unitSold, 0, 2 * product.minimumStock, productDetails[product.barcode.ToString()].costPrice);
                 priceList.Add(product.barcode, newPrice);
             }
 
@@ -406,15 +406,15 @@ namespace HQServer.WebUI.Controllers
             };
         }
 
-        public float activePrice(float cur_selling_price, int curr_qty, int threshold, int units_sold, float global_sales_value, int max_stock, float cost_price)
+        public double activePrice(double cur_selling_price, int curr_qty, int threshold, int units_sold, double global_sales_value, int max_stock, double cost_price)
         {
-            float new_selling_price;
+            double new_selling_price;
             if ((global_sales_value == 0) || (units_sold == 0))
             {
                 new_selling_price = (2 / 3) * cur_selling_price;
                 return new_selling_price;
             }
-            float value_quo = (cur_selling_price * units_sold) / global_sales_value;
+            double value_quo = (cur_selling_price * units_sold) / global_sales_value;
 
             if (curr_qty < 1.1 * threshold)
                 new_selling_price = 2 * cost_price;

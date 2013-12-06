@@ -6,7 +6,12 @@
 <p>
     Please enter product name or barcode.
 </p>
-<h3>@TempData["Results"]</h3>
+        @{
+            if(TempData["results"] != null)
+            {
+                <div class="alert alert-danger">@TempData["results"] </div>
+            }
+        }
 @using(Html.BeginForm("ProcessSearch","Admin",FormMethod.Get)) {
     <div>
         <fieldset>

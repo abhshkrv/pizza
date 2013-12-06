@@ -14,8 +14,8 @@ namespace HQServer.Domain.Entities
         [Key, Column(Order = 1)]
         public int outletID { get; set; }
         [Key, Column(Order = 2)]
-        public int barcode { get; set; }
+        public string barcode { get; set; }
         public int unitSold { get; set; }
-        public float cost { get; set; }
+        public double cost { get; set; }
     }
 }

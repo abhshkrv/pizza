@@ -13,7 +13,7 @@ namespace HQServer.Domain.Entities
         [Key, Column(Order = 0)]
         public int transactionID { get; set; }
         public DateTime date { get; set; }
-        public int cashierID { get; set; }
         public string userKey { get; set; }
+        public double totalTransactionCost { get; set; }
     }
 }

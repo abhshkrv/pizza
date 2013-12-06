@@ -7,13 +7,13 @@ namespace HQServer.Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.0.1-21010")]
-    public sealed partial class onlineshopping : IMigrationMetadata
+    public sealed partial class newDB : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(onlineshopping));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(newDB));
         
         string IMigrationMetadata.Id
         {
-            get { return "201312051542169_onlineshopping"; }
+            get { return "201312061039123_newDB"; }
         }
         
         string IMigrationMetadata.Source

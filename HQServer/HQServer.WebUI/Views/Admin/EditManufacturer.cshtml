@@ -3,12 +3,12 @@
     ViewBag.Title = "EditManufacturer";
 }
 
-<h2>EditManufacturer</h2>
+<h2>Edit Manufacturer</h2>
 @using (Html.BeginForm("EditManufacturer", "Admin"))
 {
         <div>
         <fieldset>
-            <legend>Edit @Model.</legend>
+            <legend>Edit @Model.manufacturerName</legend>
 
             @Html.EditorForModel()
             <p>

@@ -3,7 +3,7 @@ namespace HQServer.Domain.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class first : DbMigration
+    public partial class newDB : DbMigration
     {
         public override void Up()
         {
@@ -67,10 +67,11 @@ namespace HQServer.Domain.Migrations
                 c => new
                     {
                         outletID = c.Int(nullable: false),
-                        barcode = c.Int(nullable: false),
-                        sellingPrice = c.Single(nullable: false),
+                        barcode = c.String(nullable: false, maxLength: 128),
+                        sellingPrice = c.Double(nullable: false),
                         currentStock = c.Int(nullable: false),
                         minimumStock = c.Int(nullable: false),
+                        discountPercentage = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => new { t.outletID, t.barcode });
             
@@ -88,23 +89,23 @@ namespace HQServer.Domain.Migrations
                 "dbo.OutletTransactionDetails",
                 c => new
                     {
-                        transactionID = c.Int(nullable: false),
+                        transactionSummaryID = c.Int(nullable: false),
                         outletID = c.Int(nullable: false),
-                        barcode = c.Int(nullable: false),
+                        barcode = c.String(nullable: false, maxLength: 128),
                         unitSold = c.Int(nullable: false),
-                        cost = c.Single(nullable: false),
+                        cost = c.Double(nullable: false),
                     })
-                .PrimaryKey(t => new { t.transactionID, t.outletID, t.barcode });
+                .PrimaryKey(t => new { t.transactionSummaryID, t.outletID, t.barcode });
             
             CreateTable(
                 "dbo.OutletTransactions",
                 c => new
                     {
-                        transactionID = c.String(nullable: false, maxLength: 128),
+                        transactionSummaryID = c.Int(nullable: false),
                         outletID = c.Int(nullable: false),
                         date = c.DateTime(nullable: false),
                     })
-                .PrimaryKey(t => new { t.transactionID, t.outletID });
+                .PrimaryKey(t => new { t.transactionSummaryID, t.outletID });
             
             CreateTable(
                 "dbo.Products",
@@ -115,8 +116,8 @@ namespace HQServer.Domain.Migrations
                         barcode = c.String(),
                         categoryID = c.Int(nullable: false),
                         manufacturerID = c.Int(nullable: false),
-                        costPrice = c.Single(nullable: false),
-                        maxPrice = c.Single(nullable: false),
+                        costPrice = c.Double(nullable: false),
+                        maxPrice = c.Double(nullable: false),
                         currentStock = c.Int(nullable: false),
                         minimumStock = c.Int(nullable: false),
                         bundleUnit = c.Int(nullable: false),
@@ -124,10 +125,34 @@ namespace HQServer.Domain.Migrations
                     })
                 .PrimaryKey(t => t.productID);
             
+            CreateTable(
+                "dbo.OnlineTransactionDetails",
+                c => new
+                    {
+                        transactionID = c.Int(nullable: false),
+                        barcode = c.String(nullable: false, maxLength: 128),
+                        shopID = c.Int(nullable: false),
+                        unitSold = c.Int(nullable: false),
+                        totalCost = c.Double(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.transactionID, t.barcode });
+            
+            CreateTable(
+                "dbo.OnlineTransactions",
+                c => new
+                    {
+                        transactionID = c.Int(nullable: false, identity: true),
+                        date = c.DateTime(nullable: false),
+                        userKey = c.String(),
+                    })
+                .PrimaryKey(t => t.transactionID);
+            
         }
         
         public override void Down()
         {
+            DropTable("dbo.OnlineTransactions");
+            DropTable("dbo.OnlineTransactionDetails");
             DropTable("dbo.Products");
             DropTable("dbo.OutletTransactions");
             DropTable("dbo.OutletTransactionDetails");

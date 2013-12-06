@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "AddCategory";
+}
+
+<h2>Add Category</h2>
+
+@using (Html.BeginForm("AddCategory","Admin")) {
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-10 col-md-offset-1">
+            <div class="span8">
+                <form action="billing" method="post" class="form-horizontal" id="billingform" accept-charset="utf-8">
+                    <div class="control-group">
+                        <label for="categoryName" class="control-label">
+                            Category name
+                        </label>
+                        <div class="controls">
+                            <input name="categoryName" type="text" value="" id="categoryName">
+                        </div>
+                    </div>
+   
+
+                    <p></p>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Category</button>
+                        <a href="@Url.Action("CategoriesList")" class="btn btn btn-danger">Cancel and return to list</a>
+                    </div>
+                </form>
+            </div> <!-- .span8 -->
+        </div>
+        </div>
+</div>
+    
+}
+
+

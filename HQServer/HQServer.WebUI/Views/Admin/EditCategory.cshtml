@@ -1,0 +1,19 @@
+﻿@model HQServer.Domain.Entities.Category
+@{
+    ViewBag.Title = "EditCategory";
+}
+
+<h2>Edit Category</h2>
+@using (Html.BeginForm("EditCategory", "Admin"))
+{
+        <div>
+        <fieldset>
+            <legend>Edit @Model.categoryName</legend>
+
+            @Html.EditorForModel()
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        </fieldset>
+    </div>
+}

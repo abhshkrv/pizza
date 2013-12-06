@@ -98,21 +98,13 @@
     <Compile Include="Entities\OutletTransaction.cs" />
     <Compile Include="Entities\OutletTransactionDetail.cs" />
     <Compile Include="Entities\Products.cs" />
-    <Compile Include="Migrations\201310270937095_first.cs" />
-    <Compile Include="Migrations\201310270937095_first.Designer.cs">
-      <DependentUpon>201310270937095_first.cs</DependentUpon>
+    <Compile Include="Migrations\201312061039123_newDB.cs" />
+    <Compile Include="Migrations\201312061039123_newDB.Designer.cs">
+      <DependentUpon>201312061039123_newDB.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201310302146420_outlet.cs" />
-    <Compile Include="Migrations\201310302146420_outlet.Designer.cs">
-      <DependentUpon>201310302146420_outlet.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201310310000080_transactionSummaryID.cs" />
-    <Compile Include="Migrations\201310310000080_transactionSummaryID.Designer.cs">
-      <DependentUpon>201310310000080_transactionSummaryID.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312051542169_onlineshopping.cs" />
-    <Compile Include="Migrations\201312051542169_onlineshopping.Designer.cs">
-      <DependentUpon>201312051542169_onlineshopping.cs</DependentUpon>
+    <Compile Include="Migrations\201312061120419_totalCostForOnlineTransaction.cs" />
+    <Compile Include="Migrations\201312061120419_totalCostForOnlineTransaction.Designer.cs">
+      <DependentUpon>201312061120419_totalCostForOnlineTransaction.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,17 +114,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201310270937095_first.resx">
-      <DependentUpon>201310270937095_first.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201312061039123_newDB.resx">
+      <DependentUpon>201312061039123_newDB.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201310302146420_outlet.resx">
-      <DependentUpon>201310302146420_outlet.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201310310000080_transactionSummaryID.resx">
-      <DependentUpon>201310310000080_transactionSummaryID.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312051542169_onlineshopping.resx">
-      <DependentUpon>201312051542169_onlineshopping.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201312061120419_totalCostForOnlineTransaction.resx">
+      <DependentUpon>201312061120419_totalCostForOnlineTransaction.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

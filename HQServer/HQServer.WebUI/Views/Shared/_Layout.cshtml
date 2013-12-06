@@ -6,6 +6,7 @@
     <link href="@Url.Content("~/Content/offcanvas.css")" rel="stylesheet" type="text/css" />
     <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/bootstrap.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Highcharts-3.0.1/js/highcharts.js")" type="text/javascript"></script>
 </head>
 <style type="text/css">
     /* Move down content because we have a fixed navbar that is 50px tall */
@@ -25,40 +26,32 @@
                     <li class="active"><a href="@Url.Action("../Home/Index")">Home</a></li>
                     <li><a href="@Url.Action("../Home/About")">About</a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Products <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Inventory<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li>
                                 <ul>
-                                    <li class="dropdown-header">Glyphicons</li>
-                                    <li><a href="@Url.Action("../Admin/Index")">View Inventory</a></li>
-                                    <li class="disabled"><a href="@Url.Action("../Admin/Search")">Search for product</a></li>
-                                    <li><a href="#">Examples</a></li>
+                                    <li class="dropdown-header">Productss</li>
+                                    <li><a href="@Url.Action("../Admin/Index")">View all products</a></li>
+                                    <li><a href="@Url.Action("../Admin/Search")">Search for product</a></li>
                                     <li class="divider"></li>
-                                    <li class="dropdown-header">Dropdowns</li>
-                                    <li><a href="#">Example</a></li>
-                                    <li><a href="#">Aligninment options</a></li>
-                                    <li><a href="#">Headers</a></li>
-                                    <li><a href="#">Disabled menu items</a></li>
+                                    <li class="dropdown-header">Manufacturers</li>
+                                    <li><a href="@Url.Action("../Admin/ManufacturersList")">View all manufacturers</a></li>
+                                    <li class="divider"></li>
+                                    <li class="dropdown-header">Categories</li>
+                                    <li><a href="@Url.Action("../Admin/CategoriesList")">View all categories</a></li>
                                 </ul>
                             </li>
                            
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Transactions<span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Outlets<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li>
                                 <ul>
-                                    <li class="dropdown-header">Glyphicons</li>
-                                    <li><a href="@Url.Action("../Admin/Index")">View Inventory</a></li>
-                                    <li class="disabled"><a href="@Url.Action("../Admin/Search")">Search for product</a></li>
-                                    <li><a href="#">Examples</a></li>
-                                    <li class="divider"></li>
-                                    <li class="dropdown-header">Dropdowns</li>
-                                    <li><a href="#">Example</a></li>
-                                    <li><a href="#">Aligninment options</a></li>
-                                    <li><a href="#">Headers</a></li>
-                                    <li><a href="#">Disabled menu items</a></li>
+                                    <li><a href="@Url.Action("../Shop/List")">View Outlet lists</a></li>
+                                    <li><a href="@Url.Action("../Shop/ViewTransactionsForOutlet")">View transactions for outlet</a></li>
+                                    <li><a href="@Url.Action("../Shop/ViewInventoryForOutlet")">View inventory for outlet</a></li>
                                 </ul>
                             </li>
 

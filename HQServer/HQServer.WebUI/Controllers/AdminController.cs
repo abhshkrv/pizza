@@ -4,6 +4,9 @@ using HQServer.Domain.Entities;
 using System.Linq;
 using HQServer.WebUI.Models;
 using System;
+using System.Collections.Generic;
+using DotNet.Highcharts.Options;
+using DotNet.Highcharts.Helpers;
 namespace HQServer.WebUI.Controllers
 {
     [Authorize]
@@ -138,8 +141,7 @@ namespace HQServer.WebUI.Controllers
         {
 
             Product prod = _productRepo.Products.FirstOrDefault(p => p.productID == productId);
-            int bc = Int32.Parse(prod.barcode);
-            OutletInventory outletInventory = _outletInventoryRepo.OutletInventories.FirstOrDefault(o => o.barcode == bc && o.currentStock != 0);
+            OutletInventory outletInventory = _outletInventoryRepo.OutletInventories.FirstOrDefault(o => o.barcode == prod.barcode && o.currentStock != 0);
             if (outletInventory == null)
             {
                 if (prod != null)
@@ -226,18 +228,143 @@ namespace HQServer.WebUI.Controllers
         {
 
             Manufacturer manufacturer = _manufacturerRepo.Manufacturers.FirstOrDefault(m => m.manufacturerID == manufacturerId);
-//OutletInventory outletInventory = _outletInventoryRepo.OutletInventories.FirstOrDefault(o => o.barcode ==bc && o.currentStock!=0);
-           // if (outletInventory == null)
-            //{
-                if (manufacturer != null)
+            List<Product> products =new List<Product>(_productRepo.Products.Where(p => p.manufacturerID== manufacturer.manufacturerID));
+            if (products.Count==0) // If no products belong to the manufacturer 
+            {
+                _manufacturerRepo.deleteManufacturer(manufacturer);
+                TempData["message"] = string.Format("{0} was deleted", manufacturer.manufacturerName);
+            }
+            else
+            {
+                foreach (var item in products)
                 {
-                    _manufacturerRepo.deleteManufacturer(manufacturer);
-                    TempData["message"] = string.Format("{0} was deleted", manufacturer.manufacturerName);
+                    List<OutletInventory> outletInventory = new List<OutletInventory>(_outletInventoryRepo.OutletInventories.Where(o => o.barcode == item.barcode && o.currentStock > 0));
+                    if (outletInventory == null)
+                    {
+                        _manufacturerRepo.deleteManufacturer(manufacturer);
+                        TempData["message"] = string.Format("{0} was deleted", manufacturer.manufacturerName);
+                    }
+                    else
+                    {
+                        TempData["message"] = "Item in production";
+                    }
                 }
-                              
-           // }
-           // else TempData["message"] = "Item in production";
+            }
             return RedirectToAction("ManufacturersList");
+        }
+
+    /* CRUD for categories*/
+
+        /* CRUD for manufacturers */
+
+        public ViewResult AddCategory()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddCategory(string categoryName = null)
+        {
+            Category category = new Category();
+
+            if (ModelState.IsValid)
+            {
+                category.categoryName = categoryName;
+                _categoryRepo.saveCategory(category);
+                TempData["message"] = string.Format("{0} has been saved", category.categoryName);
+                return RedirectToAction("CategoriesList");
+            }
+            else
+            {
+                // there is something wrong with the data values
+                return View(category);
+            }
+
+
+        }
+
+        public ViewResult CategoriesList(int page = 1)
+        {
+            CategoriesListViewModel viewModel = new CategoriesListViewModel
+            {
+                Categories= _categoryRepo.Categories
+                .OrderBy(c=>c.categoryID)
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize),
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = PageSize,
+                    TotalItems = _categoryRepo.Categories.Count()
+                }
+            };
+
+            return View(viewModel);
+        }
+
+        public ViewResult EditCategory(int categoryId)
+        {
+            Category category = _categoryRepo.Categories.FirstOrDefault(c => c.categoryID == categoryId);
+            return View(category);
+        }
+        [HttpPost]
+        public ActionResult EditCategory(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                _categoryRepo.saveCategory(category);
+                TempData["message"] = string.Format("{0} has been saved", category.categoryName);
+                return RedirectToAction("CategoriesList");
+            }
+            else
+            {
+                // there is something wrong with the data values
+                return View(category);
+            }
+        }
+        [HttpPost]
+        public ActionResult DeleteCategory(int categoryId)
+        {
+
+            Category category = _categoryRepo.Categories.FirstOrDefault(c => c.categoryID == categoryId);
+            List<Product> products = new List<Product>(_productRepo.Products.Where(p => p.categoryID == category.categoryID));
+            if (products.Count == 0) // If no products belong to the category 
+            {
+                _categoryRepo.deleteCategory(category);
+                TempData["message"] = string.Format("{0} was deleted", category.categoryName);
+            }
+            else
+            {
+                foreach (var item in products)
+                {
+                    List<OutletInventory> outletInventory = new List<OutletInventory>(_outletInventoryRepo.OutletInventories.Where(o => o.barcode == item.barcode && o.currentStock > 0));
+                    if (outletInventory == null)
+                    {
+                        _categoryRepo.deleteCategory(category);
+                        TempData["message"] = string.Format("{0} was deleted", category.categoryName);
+                    }
+                    else
+                    {
+                        TempData["message"] = "Item in production";
+                    }
+                }
+            }
+            return RedirectToAction("CategoriesList");
+        }
+
+        public ActionResult TestCharts()
+        {
+            DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
+                .SetXAxis(new XAxis
+                {
+                    Categories = new[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
+                })
+                .SetSeries(new Series
+                {
+                    Data = new Data(new object[] { 29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4 })
+                });
+
+            return View(chart);
         }
 
         [HttpGet]
