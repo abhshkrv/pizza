@@ -249,15 +249,15 @@ namespace HQServer.WebUI.Controllers
         [HttpPost]
         public string UploadOutletInventory(string input = null)
         {
-            var i = 0;
+           /* var i = 0;
 
             if (_outletInventoryRepo.OutletInventories.Count() == 0)
                 i = 1;
             else
-                i = _outletTransactionRepo.OutletTransactions.Max(t => t.transactionSummaryID) + 1;
-
+             ;//   i = _outletInventoryRepo.OutletInventories.OrderByDescending(x => x.).First().transactionSummaryID + 1;
+            */
             JObject raw = JObject.Parse(input);
-            int outletID = (int)raw["OutletID"];
+            int outletID = (int)raw["ShopID"];
 
             JArray transactionArray = (JArray)raw["Inventory"];
             OutletInventory outletInventory;
