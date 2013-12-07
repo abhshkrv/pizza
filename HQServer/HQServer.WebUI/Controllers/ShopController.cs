@@ -111,7 +111,7 @@ namespace HQServer.WebUI.Controllers
                 outlet.address = address;
                 _outletRepo.saveOutlet(outlet);
                 TempData["message"] = string.Format("{0} has been saved", outlet.outletID);
-                return RedirectToAction("../Home/Index");
+                return RedirectToAction("List");
             }
             else
             {
@@ -239,7 +239,7 @@ namespace HQServer.WebUI.Controllers
                 i = _outletTransactionRepo.OutletTransactions.Max(t => t.transactionSummaryID) + 1;
 
             JObject raw = JObject.Parse(input);
-            int outletID = (int)raw["ShopID"];
+            int outletID = (int)raw["OutletID"];
 
             JArray transactionArray = (JArray)raw["Inventory"];
             OutletInventory outletInventory;

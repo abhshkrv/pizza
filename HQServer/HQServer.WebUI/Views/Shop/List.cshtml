@@ -6,46 +6,65 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>List</h2>
-<p>@Html.ActionLink("Add a new outlet", "Create")</p>
+<div class="col-sm-12 col-md-10 col-md-offset-1">
+    <div class="row">
+        <h2>Outlets</h2>
+        @{
+            if(TempData["message"] != null)
+            {
+                <div class="alert alert-danger">@TempData["message"] </div>
+            }
+        }
+        <p></p>
+        <a href="@Url.Action("Create")" class="btn btn-primary">Add Outlet</a>
 
-<table class="Grid">
-    <tr>
-        <th>
-            ID
-        </th>
-        <th>
-            Owner Name
-        </th>
-        <th>
-            Address
-        </th>
-        
-        <th>Actions</th>
-        <th></th>
-    </tr>
-@{ 
-  foreach (var item in Model.Outlets) {
-    
-    <tr>
-        <td>@item.outletID</td>
-        <td>@item.owner</td>
-        <td >@item.address</td>
-        <td>
-        @using (Html.BeginForm("Delete", "Shop")) {
-        @Html.Hidden("OutletID", item.outletID)
-        <input type="submit" value="Delete"/>
-         }
-        </td>
-        <td>@Html.ActionLink("Edit", "Edit", new { item.outletID })</td>
-    </tr>
- 
-}
-}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th class="text-center">Owner</th>
+                    <th class="text-center">Address</th>
+                    <th class="text-center"> Actions </th>
+                </tr>
+            </thead>
+            <tbody>
 
-</table>
+                @{
+                    foreach (var item in Model.Outlets)
+                    {
 
+                        <tr>
+                            <td class="col-sm-1 col-md-1">
+                                @item.outletID
+                            </td>
+                            <td class="col-sm-2 col-md-2" style="text-align: center">
+                                @item.owner
+                              </td>
+                            <td class="col-sm-2 col-md-2" style="text-align: center">
+                                @item.address
+                             </td>
+                            <td class="col-sm-1 col-md-1">
+                                @using (Html.BeginForm("Delete", "Shop"))
+                                {
+                                    @Html.Hidden("OutletID", item.outletID)
+                                    <button type="submit" class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                }
+
+                            </td>
+                            <td class="col-sm-1 col-md-1">
+                                <a href="@Url.Action("Edit", new { item.outletID })" class="btn btn-success"><i class="glyphicon glyphicon-pencil"></i></a>
+                            </td>
+                        </tr>
+
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div class="pager">
-@Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new {page = x}))
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new { page = x }))
 </div>

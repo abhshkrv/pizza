@@ -7,7 +7,12 @@
 <p>
     Please enter outletID
 </p>
-<h3>@TempData["Results"]</h3>
+@{
+            if(TempData["results"] != null)
+            {
+                <div class="alert alert-danger">@TempData["results"] </div>
+            }
+        }
 @using (Html.BeginForm("TransactionsForOutlet", "Shop", FormMethod.Get))
 {
     <div>
