@@ -378,23 +378,63 @@ namespace HQServer.WebUI.Controllers
             int id = Int32.Parse(shopID);
             var tid = _outletTransactionRepo.OutletTransactions.First(o => o.outletID == id && dt.Day == o.date.Day && dt.Month == o.date.Month && dt.Year == o.date.Year).transactionSummaryID;
 
-            var outletTransactionDetails = _outletTransactionDetailRepo.OutletTransactionDetails.Where(o => o.outletID == tid).ToDictionary(t => t.barcode);
-            var shopinventory = _outletInventoryRepo.OutletInventories.Where(o => o.outletID == id).ToList();
-            var inventory = _outletInventoryRepo.OutletInventories.ToDictionary(s =>(s.outletID.ToString()+s.barcode.ToString()));
+            var outletTransactionDetails = _outletTransactionDetailRepo.OutletTransactionDetails.Where(o => o.transactionSummaryID == tid).ToDictionary(t => t.barcode);
+
+            //var outletTransactionDetailsbyShop = _outletTransactionDetailRepo.OutletTransactionDetails.ToDictionary(t=>t.outletID);
+
+            var fullDetails = _outletTransactionDetailRepo.OutletTransactionDetails.ToDictionary(t => t.outletID.ToString() + t.barcode.ToString());
+
+            var shopinventory = _outletInventoryRepo.OutletInventories.Where(o => o.outletID == id).ToArray();
+            var shops = _outletRepo.Outlets.ToArray();
+            //var inventory = _outletInventoryRepo.OutletInventories.ToDictionary(s =>(s.outletID.ToString()+s.barcode.ToString()));
             var productDetails = _productRepo.Products.ToDictionary(p => p.barcode);
 
             Dictionary<string, double> priceList = new Dictionary<string, double>();
+            Dictionary<string, double> values = new Dictionary<string, double>();
 
-            foreach (var product in shopinventory)
+            var productList = _productRepo.Products.ToArray();
+
+            foreach (var p in productList)
             {
                 double value = 0;
-                foreach (var shop in _outletRepo.Outlets)
+                foreach (var shop in shops)
                 {
-                    var item = _outletTransactionDetailRepo.OutletTransactionDetails.Where(o => o.outletID == shop.outletID&&o.barcode==product.barcode).First();
-                    value = value + item.cost;
+                    try
+                    {
+                        value = value + fullDetails[shop.outletID.ToString() + p.barcode.ToString()].cost;
+
+                    }
+                    catch
+                    {
+                        //values[p.barcode.ToString()] = 0;
+                    }
+
                 }
-                double newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, outletTransactionDetails[product.barcode].unitSold, 0, 2 * product.minimumStock, productDetails[product.barcode.ToString()].costPrice);
-                priceList.Add(product.barcode, newPrice);
+                values[p.barcode.ToString()] = value;
+            }
+
+            int i = 0;
+            foreach (var product in shopinventory)
+            {
+
+                try
+                {
+                    double newPrice;
+                    if (outletTransactionDetails.ContainsKey(product.barcode))
+                    {
+                        newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, outletTransactionDetails[product.barcode].unitSold, values[product.barcode.ToString()], 10000, productDetails[product.barcode.ToString()].costPrice);
+                        newPrice = Math.Ceiling(newPrice / .05) * .05;
+                        priceList.Add(product.barcode.ToString(), newPrice);
+                    }
+                    else
+                    {
+                        newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, 0, values[product.barcode.ToString()], 10000, productDetails[product.barcode.ToString()].costPrice);
+                        newPrice = Math.Ceiling(newPrice / .05) * .05;
+                        priceList.Add(product.barcode.ToString(), newPrice);
+                   
+                    }
+                }
+                catch { ;}
             }
 
 
@@ -411,13 +451,20 @@ namespace HQServer.WebUI.Controllers
             double new_selling_price;
             if ((global_sales_value == 0) || (units_sold == 0))
             {
-                new_selling_price = (2 / 3) * cur_selling_price;
+                new_selling_price = (3 * cur_selling_price) / 4;
                 return new_selling_price;
             }
             double value_quo = (cur_selling_price * units_sold) / global_sales_value;
-
+            if (value_quo == 1)
+            {
+                value_quo /= 10;
+            }
+            else 
+            {
+                value_quo /= 5;
+            }
             if (curr_qty < 1.1 * threshold)
-                new_selling_price = 2 * cost_price;
+                new_selling_price = 1.25 * cost_price;
 
             else if (curr_qty < 1.5 * threshold)
             {
