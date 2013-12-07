@@ -12,6 +12,7 @@ namespace HQServer.Domain.Abstract
         IQueryable<OutletInventory> OutletInventories { get; }
         //void saveOutletInventory(OutletInventory outletInventory);
         void quickSaveOutletInventory(OutletInventory outletInventory);
+        void quickUpdateOutletInventory(OutletInventory outletInventory);
         void saveContext();
         void deleteOutletInventory(OutletInventory outletInventory);
     }

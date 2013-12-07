@@ -259,19 +259,21 @@ namespace HQServer.WebUI.Controllers
             JObject raw = JObject.Parse(input);
             int outletID = (int)raw["ShopID"];
 
-            JArray transactionArray = (JArray)raw["Inventory"];
+            JArray inventoryArray = (JArray)raw["Inventory"];
             OutletInventory outletInventory;
 
             var outletInventoryList = new Dictionary<Tuple<int, string>, OutletInventory>();
 
-            foreach (var item in _outletInventoryRepo.OutletInventories)
+            var outletInventoriesArray = _outletInventoryRepo.OutletInventories.ToArray();
+            var outletInventoryDictionary = _outletInventoryRepo.OutletInventories.ToDictionary(t=>t.outletID.ToString()+t.barcode);
+            foreach (var item in outletInventoriesArray)
             {
                 Tuple<int, string> t = new Tuple<int, string>(item.outletID, item.barcode);
                 outletInventoryList.Add(t, item);
             }
 
 
-            foreach (var t in transactionArray)
+            foreach (var t in inventoryArray)
             {
                 string barcode = (string)t["barcode"];
                 int currentStock = (int)t["currentStock"];
@@ -282,17 +284,28 @@ namespace HQServer.WebUI.Controllers
 
                 Tuple<int, string> k = new Tuple<int, string>(outletID, barcode);
                 if (outletInventoryList.ContainsKey(k))
-                    outletInventory = outletInventoryList[k];
+                {
+                    outletInventory = outletInventoryDictionary[outletID.ToString()+barcode];
+                    //outletInventory.outletID = outletID;
+                    //outletInventory.barcode = barcode;
+                    outletInventory.currentStock = currentStock;
+                    outletInventory.discountPercentage = discountPercentage;
+                    outletInventory.minimumStock = minimumStock;
+                    outletInventory.sellingPrice = sellingPrice;
+                    _outletInventoryRepo.quickUpdateOutletInventory(outletInventory);
+                }
                 else
+                {
                     outletInventory = new OutletInventory();
 
-                outletInventory.outletID = outletID;
-                outletInventory.barcode = barcode;
-                outletInventory.currentStock = currentStock;
-                outletInventory.discountPercentage = discountPercentage;
-                outletInventory.minimumStock = minimumStock;
-                outletInventory.sellingPrice = sellingPrice;
-                _outletInventoryRepo.quickSaveOutletInventory(outletInventory);
+                    outletInventory.outletID = outletID;
+                    outletInventory.barcode = barcode;
+                    outletInventory.currentStock = currentStock;
+                    outletInventory.discountPercentage = discountPercentage;
+                    outletInventory.minimumStock = minimumStock;
+                    outletInventory.sellingPrice = sellingPrice;
+                    _outletInventoryRepo.quickSaveOutletInventory(outletInventory);
+                }
             }
 
             _outletInventoryRepo.saveContext();

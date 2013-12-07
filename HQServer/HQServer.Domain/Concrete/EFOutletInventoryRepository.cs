@@ -2,6 +2,7 @@
 using HQServer.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 
@@ -19,6 +20,13 @@ namespace HQServer.Domain.Concrete
         {
             context.OutletInventories.Add(outletInventory);
 
+        }
+
+        public void quickUpdateOutletInventory(OutletInventory outletInventory)
+        {
+            //db.Users.Attach(entity);
+           // context.OutletInventories.Attach(outletInventory);
+            context.Entry(outletInventory).State = EntityState.Modified;
         }
 
         public void saveContext()
