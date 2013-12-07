@@ -2,6 +2,7 @@
 using HQServer.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 
@@ -17,7 +18,16 @@ namespace HQServer.Domain.Concrete
 
         public void saveBatchResponse(BatchResponse batchResponse)
         {
-
+            if (batchResponse.batchResponseID == 0)
+            {
+                context.BatchResponses.Add(batchResponse);
+                context.SaveChanges();
+            }
+            else 
+            {
+                context.Entry(batchResponse).State = EntityState.Modified;
+                context.SaveChanges();
+            }
         }
 
         public void deleteBatchResponse(BatchResponse batchResponse)

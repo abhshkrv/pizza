@@ -10,7 +10,7 @@ namespace HQServer.Domain.Entities
     public class BatchResponseDetail
     {
         [Key, Column(Order = 0)]
-        public int requestID { get; set; }
+        public int batchResponseID { get; set; }
         [Key, Column(Order = 1)]
         public int barcode { get; set; }
         public int quantity { get; set; }

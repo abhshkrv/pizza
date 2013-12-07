@@ -43,7 +43,7 @@ namespace HQServer.WebUI.Controllers
                 batchResponse.requestID = Int16.Parse(requestID);
 
                 _batchResponseRepo.saveBatchResponse(batchResponse);
-                batchResponseDetail.requestID = batchResponse.requestID;
+                batchResponseDetail.batchResponseID = batchResponse.requestID;
                 batchResponseDetail.barcode = Int32.Parse(barcode);
                 batchResponseDetail.quantity = Int32.Parse(qty);
 
@@ -53,6 +53,38 @@ namespace HQServer.WebUI.Controllers
                     ContentType = "application/json",
                 };
             }
+        }
+
+        public ActionResult viewRequests()
+        {
+            var req = _batchResponseRepo.BatchResponses;
+            return View(req);
+        }
+
+        public ActionResult viewRequest(string id)
+        {
+            //BatchResponse br = _batchResponseRepo.BatchResponses.FirstOrDefault(b => b.requestID.ToString() == requestID & b.outletID.ToString() == outletID);
+            var batchResponseDetails = _batchResponseDetailRepo.BatchResponseDetails.Where(b => b.batchResponseID.ToString() == id).ToList();
+
+            return View(batchResponseDetails);
+        }
+
+        public ActionResult attend(string id)
+        {
+            BatchResponse br = _batchResponseRepo.BatchResponses.FirstOrDefault(b => b.batchResponseID.ToString() == id);
+            br.status = Status.RESPONDED;
+            _batchResponseRepo.saveBatchResponse(br);
+            return View();
+        }
+
+        public string acknowledge(string outletID, string requestID)
+        {
+            BatchResponse br = _batchResponseRepo.BatchResponses.FirstOrDefault(b => b.requestID.ToString() == requestID & b.outletID.ToString() == outletID);
+            if (br == null)
+                return "Fail";
+            br.status = Status.ACKNOWLEDGED;
+            _batchResponseRepo.saveBatchResponse(br);
+            return "Success";
         }
 
         public ActionResult Index()
