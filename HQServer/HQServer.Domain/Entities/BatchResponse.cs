@@ -9,6 +9,7 @@ namespace HQServer.Domain.Entities
 {
     public class BatchResponse
     {
+        [Key]
         public int batchResponseID { get; set; }
         public int requestID { get; set; }
         public int outletID { get; set; }

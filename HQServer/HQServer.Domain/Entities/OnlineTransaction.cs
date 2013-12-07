@@ -15,5 +15,6 @@ namespace HQServer.Domain.Entities
         public DateTime date { get; set; }
         public string userKey { get; set; }
         public double totalTransactionCost { get; set; }
+        public string shippingAddress { get; set; }
     }
 }

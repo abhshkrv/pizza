@@ -101,13 +101,9 @@
     <Compile Include="Entities\OutletTransaction.cs" />
     <Compile Include="Entities\OutletTransactionDetail.cs" />
     <Compile Include="Entities\Products.cs" />
-    <Compile Include="Migrations\201312061039123_newDB.cs" />
-    <Compile Include="Migrations\201312061039123_newDB.Designer.cs">
-      <DependentUpon>201312061039123_newDB.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201312061120419_totalCostForOnlineTransaction.cs" />
-    <Compile Include="Migrations\201312061120419_totalCostForOnlineTransaction.Designer.cs">
-      <DependentUpon>201312061120419_totalCostForOnlineTransaction.cs</DependentUpon>
+    <Compile Include="Migrations\201312071103340_restart.cs" />
+    <Compile Include="Migrations\201312071103340_restart.Designer.cs">
+      <DependentUpon>201312071103340_restart.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -115,14 +111,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201312061039123_newDB.resx">
-      <DependentUpon>201312061039123_newDB.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201312061120419_totalCostForOnlineTransaction.resx">
-      <DependentUpon>201312061120419_totalCostForOnlineTransaction.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\Highcharts-3.0.1\js\adapters\mootools-adapter.js" />
@@ -145,6 +133,11 @@
     <Content Include="Scripts\Highcharts-3.0.1\js\themes\gray.js" />
     <Content Include="Scripts\Highcharts-3.0.1\js\themes\grid.js" />
     <Content Include="Scripts\Highcharts-3.0.1\js\themes\skies.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201312071103340_restart.resx">
+      <DependentUpon>201312071103340_restart.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

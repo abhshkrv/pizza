@@ -142,6 +142,24 @@ namespace HQServer.WebUI.Controllers
             return View(viewModel);
         }
 
+       /* public ActionResult TestCharts()
+        {
+            DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
+                .SetXAxis(new XAxis
+                {
+                    Categories = new[] { "Jan", "Feb", "Mar", "Apr", "May" }
+                })
+                .SetSeries(new Series
+                {
+                    Type = ChartTypes.Pie,
+                    //Name =  { "Jan", "Feb", "Mar", "Apr", "May" },
+
+                    Data = new Data(new object[] { 29.9, 71.5, 106.4, 129.2, 45 })
+                });
+
+            return View(chart);
+        } */
+
         public ViewResult Edit(int outletId)
         {
             Outlet outlet = _outletRepo.Outlets.FirstOrDefault(o => o.outletID == outletId);

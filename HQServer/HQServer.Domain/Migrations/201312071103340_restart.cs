@@ -3,7 +3,7 @@ namespace HQServer.Domain.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class newDB : DbMigration
+    public partial class restart : DbMigration
     {
         public override void Up()
         {
@@ -11,23 +11,24 @@ namespace HQServer.Domain.Migrations
                 "dbo.BatchResponseDetails",
                 c => new
                     {
-                        requestID = c.Int(nullable: false),
+                        batchResponseID = c.Int(nullable: false),
                         barcode = c.Int(nullable: false),
                         quantity = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => new { t.requestID, t.barcode });
+                .PrimaryKey(t => new { t.batchResponseID, t.barcode });
             
             CreateTable(
                 "dbo.BatchResponses",
                 c => new
                     {
-                        requestID = c.Int(nullable: false, identity: true),
+                        batchResponseID = c.Int(nullable: false, identity: true),
+                        requestID = c.Int(nullable: false),
                         outletID = c.Int(nullable: false),
                         timestamp = c.DateTime(nullable: false),
                         comments = c.String(),
                         status = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.requestID);
+                .PrimaryKey(t => t.batchResponseID);
             
             CreateTable(
                 "dbo.Categories",
@@ -144,6 +145,8 @@ namespace HQServer.Domain.Migrations
                         transactionID = c.Int(nullable: false, identity: true),
                         date = c.DateTime(nullable: false),
                         userKey = c.String(),
+                        totalTransactionCost = c.Double(nullable: false),
+                        shippingAddress = c.String(),
                     })
                 .PrimaryKey(t => t.transactionID);
             
