@@ -17,5 +17,8 @@ namespace HQServer.Domain.Entities
         public int currentStock { get; set; }
         public int minimumStock { get; set; }
         public int discountPercentage { get; set; }
+        public int temporaryStock { get; set; }
+        public int afterUpdateStock { get; set; }
+       
     }
 }

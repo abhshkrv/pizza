@@ -6,31 +6,44 @@
     ViewBag.Title = "OutletTransactions";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>OutletTransactions</h2>
 
-<table class="Grid">
-    <tr>
 
-        <th>
-            Date
-        </th>
+<div class="col-sm-12 col-md-10 col-md-offset-1">
+    <div class="row">
+        <h2>Outlet Transactions</h2>
+        <p></p>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">Date</th>
+                    <th>ID</th>
+                    <th> Actions </th>
+                </tr>
+            </thead>
+            <tbody>
 
-        <th>
-            Transaction ID
-        </th>
+                @{
+                    foreach (var item in Model.Transactions)
+                    {
+                        string text = item.transactionSummaryID.ToString();
 
-    </tr>
-@{ 
-  foreach (var item in Model.Transactions) {
-      string text = item.transactionSummaryID.ToString();
-    <tr>
-        <td>@item.date.ToShortDateString()</td>
-        <td>@Html.ActionLink(text, "TransactionDetails","Shop",new {item.transactionSummaryID},null)</td>
-      
-    </tr>
- 
-}
-}
+                        <tr>
+                            <td style="text-align: center">
+                                @item.date.ToShortDateString()
+                            </td>
+                            <td>
+                                @item.transactionSummaryID
+                              </td>
+                            <td>
+                                <a href="@Url.Action("TransactionDetails", new {item.transactionSummaryID})" class="btn btn-success">View Transactions</a>
+                            </td>
+                        </tr>
 
-</table>
-<h4>@Html.ActionLink("Return to search criteria", "ViewTransactionsForOutlet")</h4>
+                    }
+                }
+            </tbody>
+        </table>
+        <a href="@Url.Action("ViewTransactionsForOutlet")" class="btn btn-primary">Return to search criteria</a>
+    </div>
+</div>
+

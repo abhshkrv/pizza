@@ -5,49 +5,55 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>TransactionDetails</h2>
-
 @if (Model == null)
 {
     @TempData["results"];
 }
 else
 {
-<table class="grid">
-    <tr>
-        <td><b>ID</b></td>
-        <td>@Model.transaction.transactionSummaryID</td>
-    </tr>
-    <tr>
-        <td><b>Date</b></td>
-        <td>@Model.transaction.date.ToShortDateString()</td>
-    </tr>
-     <tr>
-        <td><b>OutletID</b></td>
-         <td>@Model.transaction.outletID</td>
-     </tr>
-       
- </table>       
+  
+<div class="col-sm-12 col-md-5 col-md-offset-1">
+    <div class="row">
+        <h2>Transaction Details</h2>
+        <p></p>
+             <tr>
+        <td><b>ID : @Model.transaction.transactionSummaryID </b></td>
+        <td><b>Date : @Model.transaction.date.ToShortDateString()</b></td>
+        <td><b>OutletID : @Model.transaction.outletID</b></td>
+        </tr>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Barcode</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
 
-<h3> Transaction Details :</h3>
+                @{
+    foreach (var item in @Model.TransactionDetail)
+    {
+        string text = item.transactionSummaryID.ToString();
 
-<table>
-    <tr>
-       <td> Barcode</td>
-       <td> Quantity</td>
-       <td> Price</td>
-    </tr>
+                        <tr>
+                            <td>
+                                @item.barcode
+                            </td>
+                            <td>
+                                @item.unitSold
+                              </td>
+                            <td>
+                                @item.cost.ToString("c")
+                            </td>
+                        </tr>
 
-@foreach (var detail in @Model.TransactionDetail)
-{ 
-    <tr>
-        <td>@detail.barcode</td>
-        <td>@detail.unitSold</td>
-        <td>@detail.cost</td>
-    </tr>
+    }
+                }
+            </tbody>
+        </table>
+        <a href="@Url.Action("TransactionsForOutlet", new {@Model.transaction.outletID})" class="btn btn-primary">View all transactions</a>
+    </div>
+</div>
     
 }
-    </table>
-}
-
-<h4>@Html.ActionLink("View All Transactions", "ViewTransactions")</h4>
