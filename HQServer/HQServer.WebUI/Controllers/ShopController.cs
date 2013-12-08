@@ -12,6 +12,9 @@ using Newtonsoft.Json.Linq;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage;
+using DotNet.Highcharts.Options;
+using DotNet.Highcharts.Enums;
+using DotNet.Highcharts.Helpers;
 
 
 
@@ -147,23 +150,25 @@ namespace HQServer.WebUI.Controllers
             return View(viewModel);
         }
 
-        /* public ActionResult TestCharts()
-         {
-             DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
-                 .SetXAxis(new XAxis
-                 {
-                     Categories = new[] { "Jan", "Feb", "Mar", "Apr", "May" }
-                 })
-                 .SetSeries(new Series
-                 {
-                     Type = ChartTypes.Pie,
-                     //Name =  { "Jan", "Feb", "Mar", "Apr", "May" },
+        public ActionResult TestCharts()
+        {
 
-                     Data = new Data(new object[] { 29.9, 71.5, 106.4, 129.2, 45 })
-                 });
 
-             return View(chart);
-         } */
+            decimal shop1 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 1).Select(t => t.cost).Sum();
+            decimal shop2 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 2).Select(t => t.cost).Sum();
+            decimal shop3 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 3).Select(t => t.cost).Sum();
+            decimal shop4 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 4).Select(t => t.cost).Sum();
+            decimal shop5 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 5).Select(t => t.cost).Sum();
+            DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
+                .SetSeries(new Series
+                {
+                    Type = ChartTypes.Pie,
+
+                    Data = new Data(new object[] { new object[] { "Shop1", shop1 }, new object[] { "Shop2", shop2 }, new object[] { "Shop3", shop3 }, new object[] { "Shop4", shop4 }, new object[] { "Shop5", shop5 } })
+                });
+
+            return View(chart);
+        }
 
         public ViewResult Edit(int outletId)
         {
