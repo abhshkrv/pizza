@@ -13,6 +13,8 @@ namespace HQServer.WebUI.Controllers
         IBatchResponseRepository _batchResponseRepo;
         IProductRepository _productRepo;
         IBatchResponseDetailRepository _batchResponseDetailRepo;
+        IBatchDispatchDetailRepository _batchDispatchRepo;
+        IBatchDispatchRepository _batchDispatchDetailRepo;
         public BatchController(IBatchResponseRepository brepo, IBatchResponseDetailRepository bdrepo, IProductRepository prepo)
         {
 
@@ -88,6 +90,12 @@ namespace HQServer.WebUI.Controllers
             br.status = Status.ACKNOWLEDGED;
             _batchResponseRepo.saveBatchResponse(br);
             return "Success";
+        }
+
+        public ActionResult dispatchItems(string shopID)
+        {
+            //var 
+            return View();
         }
 
         public ActionResult Index()
