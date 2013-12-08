@@ -9,7 +9,7 @@ namespace HQServer.Domain.Abstract
 {
     public interface IBatchDispatchRepository
     {
-        IQueryable<BatchDispatch> BatchDispatches { get; }
+        IQueryable<BatchDispatch> BatchDispatchs { get; }
         void saveBatchDispatch(BatchDispatch batchDispatch);
         void deleteBatchDispatch(BatchDispatch batchDispatch);
     }

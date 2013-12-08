@@ -14,9 +14,9 @@ namespace HQServer.Domain.Entities
         public int outletID { get; set; }
         public DateTime timestamp { get; set; }
         public string comments { get; set; }
-        public Status status { get; set; }
+        public DispatchStatus status { get; set; }
     }
-    public enum Status
+    public enum DispatchStatus
     {
         NOT_RESPONDED,
         RESPONDED,

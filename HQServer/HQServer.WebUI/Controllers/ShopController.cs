@@ -453,13 +453,15 @@ namespace HQServer.WebUI.Controllers
                     decimal newPrice;
                     if (outletTransactionDetails.ContainsKey(product.barcode))
                     {
-                        newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, outletTransactionDetails[product.barcode].unitSold, values[product.barcode.ToString()], 10000, productDetails[product.barcode.ToString()].costPrice);
+                        newPrice = 0;
+                        //newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, outletTransactionDetails[product.barcode].unitSold, values[product.barcode.ToString()], 10000, productDetails[product.barcode.ToString()].costPrice);
                         //newPrice = Math.Ceiling(newPrice /0.05) * 0.05;
                         priceList.Add(product.barcode.ToString(), newPrice);
                     }
                     else
                     {
-                        newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, 0, values[product.barcode.ToString()], 10000, productDetails[product.barcode.ToString()].costPrice);
+                        newPrice = 0;
+                       // newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, 0, values[product.barcode.ToString()], 10000, productDetails[product.barcode.ToString()].costPrice);
                         // newPrice = Math.Ceiling(newPrice /0.05) * .05;
                         priceList.Add(product.barcode.ToString(), newPrice);
 
@@ -477,7 +479,7 @@ namespace HQServer.WebUI.Controllers
             };
         }
 
-        double activeprice(double cur_selling_price, int curr_Stock, int initial_value, int threshold, double global_time_val, int number_of_shops) //Initial value = batchupdate + remaining value ;(after batch arrives) //initial value in the function argument should be updated weekly since active pricing runs weekly
+        double activePrice(double cur_selling_price, int curr_Stock, int initial_value, int threshold, double global_time_val, int number_of_shops) //Initial value = batchupdate + remaining value ;(after batch arrives) //initial value in the function argument should be updated weekly since active pricing runs weekly
         {
             double new_selling_price;
             float time_val = (float)((initial_value - curr_Stock)) / (float)(initial_value); //time_val denotes the statistical value of sales of a product in a particular shop over a window of 7 days
