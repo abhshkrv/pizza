@@ -115,6 +115,10 @@
     <Compile Include="Migrations\201312080718343_decimal.Designer.cs">
       <DependentUpon>201312080718343_decimal.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201312081044104_batch1.cs" />
+    <Compile Include="Migrations\201312081044104_batch1.Designer.cs">
+      <DependentUpon>201312081044104_batch1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -150,6 +154,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201312080718343_decimal.resx">
       <DependentUpon>201312080718343_decimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312081044104_batch1.resx">
+      <DependentUpon>201312081044104_batch1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
