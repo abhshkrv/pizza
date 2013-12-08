@@ -235,7 +235,7 @@ namespace HQServer.WebUI.Controllers
                 outletTransactionDetail.transactionSummaryID = outletTransaction.transactionSummaryID;
                 outletTransactionDetail.barcode = (string)t["Key"];
                 outletTransactionDetail.unitSold = (int)t["Value"]["quantity"];
-                outletTransactionDetail.cost = (float)t["Value"]["unitPrice"];
+                outletTransactionDetail.cost = (decimal)t["Value"]["unitPrice"];
                 _outletTransactionDetailRepo.quickSaveOutletTransactionDetail(outletTransactionDetail);
             }
 
@@ -279,7 +279,7 @@ namespace HQServer.WebUI.Controllers
                 int currentStock = (int)t["currentStock"];
                 int discountPercentage = (int)t["discount"];
                 int minimumStock = (int)t["minimumStock"];
-                float sellingPrice = (float)t["sellingPrice"];
+                decimal sellingPrice = (decimal)t["sellingPrice"];
 
 
                 Tuple<int, string> k = new Tuple<int, string>(outletID, barcode);
@@ -420,14 +420,14 @@ namespace HQServer.WebUI.Controllers
             //var inventory = _outletInventoryRepo.OutletInventories.ToDictionary(s =>(s.outletID.ToString()+s.barcode.ToString()));
             var productDetails = _productRepo.Products.ToDictionary(p => p.barcode);
 
-            Dictionary<string, double> priceList = new Dictionary<string, double>();
-            Dictionary<string, double> values = new Dictionary<string, double>();
+            Dictionary<string, decimal> priceList = new Dictionary<string, decimal>();
+            Dictionary<string, decimal> values = new Dictionary<string, decimal>();
 
             var productList = _productRepo.Products.ToArray();
 
             foreach (var p in productList)
             {
-                double value = 0;
+                decimal value = 0;
                 foreach (var shop in shops)
                 {
                     try
@@ -450,17 +450,17 @@ namespace HQServer.WebUI.Controllers
 
                 try
                 {
-                    double newPrice;
+                    decimal newPrice;
                     if (outletTransactionDetails.ContainsKey(product.barcode))
                     {
                         newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, outletTransactionDetails[product.barcode].unitSold, values[product.barcode.ToString()], 10000, productDetails[product.barcode.ToString()].costPrice);
-                        newPrice = Math.Ceiling(newPrice / .05) * .05;
+                        //newPrice = Math.Ceiling(newPrice /0.05) * 0.05;
                         priceList.Add(product.barcode.ToString(), newPrice);
                     }
                     else
                     {
                         newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, 0, values[product.barcode.ToString()], 10000, productDetails[product.barcode.ToString()].costPrice);
-                        newPrice = Math.Ceiling(newPrice / .05) * .05;
+                       // newPrice = Math.Ceiling(newPrice /0.05) * .05;
                         priceList.Add(product.barcode.ToString(), newPrice);
                    
                     }
@@ -477,15 +477,15 @@ namespace HQServer.WebUI.Controllers
             };
         }
 
-        public double activePrice(double cur_selling_price, int curr_qty, int threshold, int units_sold, double global_sales_value, int max_stock, double cost_price)
+        public decimal activePrice(decimal cur_selling_price, int curr_qty, int threshold, int units_sold, decimal global_sales_value, int max_stock, decimal cost_price)
         {
-            double new_selling_price;
+            decimal new_selling_price=0;
             if ((global_sales_value == 0) || (units_sold == 0))
             {
                 new_selling_price = (3 * cur_selling_price) / 4;
                 return new_selling_price;
             }
-            double value_quo = (cur_selling_price * units_sold) / global_sales_value;
+            decimal value_quo = (cur_selling_price * units_sold) / global_sales_value;
             if (value_quo == 1)
             {
                 value_quo /= 10;
@@ -495,7 +495,8 @@ namespace HQServer.WebUI.Controllers
                 value_quo /= 5;
             }
             if (curr_qty < 1.1 * threshold)
-                new_selling_price = 1.25 * cost_price;
+                new_selling_price = cost_price;
+            //new_selling_price = 1.25 * cost_price;
 
             else if (curr_qty < 1.5 * threshold)
             {

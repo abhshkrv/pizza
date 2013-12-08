@@ -13,7 +13,7 @@ namespace HQServer.Domain.Entities
         public int outletID { get; set; }
         [Key, Column(Order = 1)]
         public string barcode { get; set; }
-        public double sellingPrice { get; set; }
+        public decimal sellingPrice { get; set; }
         public int currentStock { get; set; }
         public int minimumStock { get; set; }
         public int discountPercentage { get; set; }

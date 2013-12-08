@@ -16,11 +16,11 @@ namespace HQServer.Domain.Entities
         public string barcode { get; set; }
         public int categoryID { get; set; }
         public int manufacturerID { get; set; }
-        public double costPrice { get; set; }
-        public double maxPrice { get; set; }
+        public decimal costPrice { get; set; }
+        public decimal maxPrice { get; set; }
         public int currentStock { get; set; }
         public int minimumStock { get; set; }
         public int bundleUnit { get; set; }
-        public float discountPercentage { get; set; }
+        public decimal discountPercentage { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace HQServer.Domain.Entities
         public int transactionID { get; set; }
         public DateTime date { get; set; }
         public string userKey { get; set; }
-        public double totalTransactionCost { get; set; }
+        public decimal totalTransactionCost { get; set; }
         public string shippingAddress { get; set; }
     }
 }

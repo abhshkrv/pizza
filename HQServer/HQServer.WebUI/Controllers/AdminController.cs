@@ -103,12 +103,12 @@ namespace HQServer.WebUI.Controllers
                     manufacturer.manufacturerName = manufacturerName;
                     product.manufacturerID = getManufacturerID(manufacturer);
                     product.barcode = barcode;
-                    product.costPrice = float.Parse(costPrice);
+                    product.costPrice = decimal.Parse(costPrice);
                     product.currentStock = int.Parse(currentStock);
                     product.minimumStock = int.Parse(minimumStock);
                     product.bundleUnit = int.Parse(bundleUnit);
-                    product.maxPrice = float.Parse(maximumPrice);
-                    product.discountPercentage = float.Parse(discountPercentage);
+                    product.maxPrice = decimal.Parse(maximumPrice);
+                    product.discountPercentage = decimal.Parse(discountPercentage);
                     if (product.bundleUnit < 0 || product.barcode.Length < 8 || product.currentStock < 0 || product.maxPrice < 0)
                     {
                         TempData["message"] = "Error adding product, there are invalid fields";

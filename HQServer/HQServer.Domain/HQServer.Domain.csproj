@@ -105,6 +105,10 @@
     <Compile Include="Migrations\201312071103340_restart.Designer.cs">
       <DependentUpon>201312071103340_restart.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201312080718343_decimal.cs" />
+    <Compile Include="Migrations\201312080718343_decimal.Designer.cs">
+      <DependentUpon>201312080718343_decimal.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -137,6 +141,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201312071103340_restart.resx">
       <DependentUpon>201312071103340_restart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312080718343_decimal.resx">
+      <DependentUpon>201312080718343_decimal.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

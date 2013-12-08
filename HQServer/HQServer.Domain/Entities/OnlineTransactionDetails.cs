@@ -15,6 +15,6 @@ namespace HQServer.Domain.Entities
         public string barcode { get; set; }
         public int shopID { get; set; }
         public int unitSold { get; set; }
-        public double totalCost { get; set; }
+        public decimal totalCost { get; set; }
     }
 }

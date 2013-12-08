@@ -128,7 +128,7 @@ namespace HQServer.WebUI.Controllers
                 }
                 product.manufacturerID = manufacturersList[manufacturerName];                  
                 product.barcode = tokens[3];
-                product.costPrice = float.Parse(tokens[4]);
+                product.costPrice = decimal.Parse(tokens[4]);
                 product.currentStock = int.Parse(tokens[5]);
                 product.minimumStock = int.Parse(tokens[6]);
                 product.bundleUnit = int.Parse(tokens[7]);
