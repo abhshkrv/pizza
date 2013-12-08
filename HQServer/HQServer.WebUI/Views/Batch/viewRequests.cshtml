@@ -2,4 +2,43 @@
     ViewBag.Title = "viewRequests";
 }
 
-<h2>viewRequests</h2>
+<h2>Requests</h2>
+
+<table>
+
+    <tr>
+        <th>Response ID
+        </th>
+        <th>Request ID
+        </th>
+        <th>Shop ID
+        </th>
+        <th>Time Stamp
+        </th>
+        <th>Status
+        </th>
+        <th>
+            Comments
+        </th>
+
+    </tr>
+    @foreach (var item in Model)
+    { 
+        <tr>
+            <td><a href="/batch/viewRequest?ResponseID=@item.batchResponseID">@item.batchResponseID</a>
+            </td>
+            <td>@item.requestID
+            </td>
+            <td>@item.outletID
+            </td>
+            <td>@item.timestamp
+            </td>
+            <td>@item.status
+            </td>
+            <td>
+                @item.comments
+            </td>
+        </tr>  
+    }
+
+</table>

@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "viewRequest";
+}
+
+<h2>View Request</h2>
+<table>
+    <tr>
+        <th>Barcode
+        </th>
+        <th>Quantity
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        
+            
+        <td>
+            @item.barcode
+        </td>
+        <td>
+            @item.quantity
+        </td>
+    }
+</table>

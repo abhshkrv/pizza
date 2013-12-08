@@ -22,7 +22,7 @@ namespace HQServer.WebUI.Controllers
         }
 
         [HttpPost]
-        public ContentResult Send(string shopID, string barcode, string qty, string requestID)
+        public ContentResult Send(string shopID, string barcode, string qty, string requestID, string comment)
         {
             Product product = _productRepo.Products.FirstOrDefault(p => p.barcode == barcode);
             if (product == null)
@@ -39,14 +39,16 @@ namespace HQServer.WebUI.Controllers
                 BatchResponse batchResponse = new BatchResponse();
                 BatchResponseDetail batchResponseDetail = new BatchResponseDetail();
                 batchResponse.status = Status.NOT_RESPONDED;
+                batchResponse.comments = comment;
+                batchResponse.outletID = Int32.Parse(shopID);
                 batchResponse.timestamp = DateTime.Now;
                 batchResponse.requestID = Int16.Parse(requestID);
 
                 _batchResponseRepo.saveBatchResponse(batchResponse);
-                batchResponseDetail.batchResponseID = batchResponse.requestID;
+                batchResponseDetail.batchResponseID = batchResponse.batchResponseID;
                 batchResponseDetail.barcode = Int32.Parse(barcode);
                 batchResponseDetail.quantity = Int32.Parse(qty);
-
+                _batchResponseDetailRepo.saveBatchResponseDetail(batchResponseDetail);
                 return new ContentResult()
                 {
                     Content = "{Status:Success}",
@@ -77,6 +79,7 @@ namespace HQServer.WebUI.Controllers
             return View();
         }
 
+        [HttpPost]
         public string acknowledge(string outletID, string requestID)
         {
             BatchResponse br = _batchResponseRepo.BatchResponses.FirstOrDefault(b => b.requestID.ToString() == requestID & b.outletID.ToString() == outletID);
