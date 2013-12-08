@@ -26,13 +26,13 @@
 
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("LogOn","Account"))
 {
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-4 well well-sm">
                 <legend><i class="glyphicon glyphicon-pencil"></i>Login</legend>
-                <input class="form-control" name="username" placeholder="userame" type="text" id="UserName" name="UserName" required autofocus />
+                <input class="form-control" name="username" placeholder="username" type="text" id="UserName" name="UserName" required autofocus />
                 <input class="form-control" name="password" placeholder="Password" id="Password" name="Password" type="password" required />
                 <input id="RememberMe" name="RememberMe" type="checkbox" value="true" />
                 <input name="RememberMe" type="hidden" value="false">
