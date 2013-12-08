@@ -54,6 +54,13 @@ namespace HQServer.WebUI.Controllers
         [HttpPost]
         public ActionResult Edit(Product product)
         {
+
+            if (product.bundleUnit < 0 || product.barcode.Length < 8 || product.currentStock < 0 || product.maxPrice < 0 || product.discountPercentage<0 || product.minimumStock <0 || product.costPrice <0)
+            {
+                TempData["message"] = "Error adding product, there are invalid fields";
+                return View(product);
+            }
+
             if (ModelState.IsValid)
             {
                 _productRepo.saveProduct(product);
@@ -81,31 +88,43 @@ namespace HQServer.WebUI.Controllers
 
             if (ModelState.IsValid)
             {
-                
-                product.productName = name;
-                Category category = _categoryRepo.Categories.FirstOrDefault(c => c.categoryName == categoryName);
-                if (category == null)
-                    category = new Category();
-                category.categoryName = categoryName;                
-                product.categoryID = getCategoryID(category);
-                Manufacturer manufacturer = _manufacturerRepo.Manufacturers.FirstOrDefault(m => m.manufacturerName == manufacturerName);
-                if (manufacturer == null)
-                    manufacturer = new Manufacturer();
-                manufacturer.manufacturerName = manufacturerName;
-                product.manufacturerID = getManufacturerID(manufacturer);
-                product.barcode = barcode;
-                product.costPrice = float.Parse(costPrice);
-                product.currentStock = int.Parse(currentStock);
-                product.minimumStock = int.Parse(minimumStock);
-                product.bundleUnit = int.Parse(bundleUnit);
-                product.maxPrice = float.Parse(maximumPrice);
-                product.discountPercentage = float.Parse(discountPercentage);
-                 _productRepo.saveProduct(product);
-                 _productRepo.saveContext();
-                 _manufacturerRepo.saveContext();
-                 _categoryRepo.saveContext();
-                TempData["message"] = string.Format("{0} has been saved", product.productName);
-                return RedirectToAction("Index");
+               
+                try
+                {
+                    product.productName = name;
+                    Category category = _categoryRepo.Categories.FirstOrDefault(c => c.categoryName == categoryName);
+                    if (category == null)
+                        category = new Category();
+                    category.categoryName = categoryName;
+                    product.categoryID = getCategoryID(category);
+                    Manufacturer manufacturer = _manufacturerRepo.Manufacturers.FirstOrDefault(m => m.manufacturerName == manufacturerName);
+                    if (manufacturer == null)
+                        manufacturer = new Manufacturer();
+                    manufacturer.manufacturerName = manufacturerName;
+                    product.manufacturerID = getManufacturerID(manufacturer);
+                    product.barcode = barcode;
+                    product.costPrice = float.Parse(costPrice);
+                    product.currentStock = int.Parse(currentStock);
+                    product.minimumStock = int.Parse(minimumStock);
+                    product.bundleUnit = int.Parse(bundleUnit);
+                    product.maxPrice = float.Parse(maximumPrice);
+                    product.discountPercentage = float.Parse(discountPercentage);
+                    if (product.bundleUnit < 0 || product.barcode.Length < 8 || product.currentStock < 0 || product.maxPrice < 0)
+                    {
+                        TempData["message"] = "Error adding product, there are invalid fields";
+                        RedirectToAction("Index");
+                    }
+                    _productRepo.saveProduct(product);
+                    _productRepo.saveContext();
+                    _manufacturerRepo.saveContext();
+                    _categoryRepo.saveContext();
+                    TempData["message"] = string.Format("{0} has been saved", product.productName);
+                    return RedirectToAction("Index");
+                }
+                catch {
+                    TempData["message"] = string.Format("Invalid inputs");
+                    return RedirectToAction("Index");
+                }
             }
             else
             {
