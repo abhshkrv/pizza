@@ -119,6 +119,10 @@
     <Compile Include="Migrations\201312081044104_batch1.Designer.cs">
       <DependentUpon>201312081044104_batch1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201312082341445_latlong.cs" />
+    <Compile Include="Migrations\201312082341445_latlong.Designer.cs">
+      <DependentUpon>201312082341445_latlong.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -157,6 +161,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201312081044104_batch1.resx">
       <DependentUpon>201312081044104_batch1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312082341445_latlong.resx">
+      <DependentUpon>201312082341445_latlong.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

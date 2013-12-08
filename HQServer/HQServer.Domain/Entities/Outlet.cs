@@ -12,6 +12,8 @@ namespace HQServer.Domain.Entities
         public int outletID { get; set; }
         public string owner { get; set; }
         public string address { get; set; }
+        public double latitude { get; set; }
+        public double longitude { get; set; }
 
     }
 }
