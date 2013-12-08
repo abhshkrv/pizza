@@ -13,14 +13,20 @@ namespace HQServer.WebUI.Controllers
         IBatchResponseRepository _batchResponseRepo;
         IProductRepository _productRepo;
         IBatchResponseDetailRepository _batchResponseDetailRepo;
-        IBatchDispatchDetailRepository _batchDispatchRepo;
-        IBatchDispatchRepository _batchDispatchDetailRepo;
-        public BatchController(IBatchResponseRepository brepo, IBatchResponseDetailRepository bdrepo, IProductRepository prepo)
+        IBatchDispatchDetailRepository _batchDispatchDetailRepo;
+        IBatchDispatchRepository _batchDispatchRepo;
+        IOutletInventoryRepository _outletInventoryRepo;
+
+        public BatchController(IBatchResponseRepository brepo, IBatchResponseDetailRepository bdrepo, IProductRepository prepo, IBatchDispatchRepository bdispatchrepo, IBatchDispatchDetailRepository bddrepo, IOutletInventoryRepository outletInventoryRepo)
         {
 
             _productRepo = prepo;
             _batchResponseRepo = brepo;
             _batchResponseDetailRepo = bdrepo;
+            _batchDispatchDetailRepo = bddrepo;
+            _batchDispatchRepo = bdispatchrepo;
+            _outletInventoryRepo = outletInventoryRepo;
+
         }
 
         [HttpPost]
@@ -48,7 +54,7 @@ namespace HQServer.WebUI.Controllers
 
                 _batchResponseRepo.saveBatchResponse(batchResponse);
                 batchResponseDetail.batchResponseID = batchResponse.batchResponseID;
-                batchResponseDetail.barcode = Int32.Parse(barcode);
+                batchResponseDetail.barcode = barcode;
                 batchResponseDetail.quantity = Int32.Parse(qty);
                 _batchResponseDetailRepo.saveBatchResponseDetail(batchResponseDetail);
                 return new ContentResult()
@@ -94,8 +100,54 @@ namespace HQServer.WebUI.Controllers
 
         public ActionResult dispatchItems(string shopID)
         {
-            //var 
+            var inventoryList = _outletInventoryRepo.OutletInventories.Where(o => o.outletID.ToString() == shopID).ToArray();
+
+            BatchDispatch batch = new BatchDispatch();
+            batch.outletID = Int32.Parse(shopID);
+            batch.status = DispatchStatus.NOT_RESPONDED;
+            batch.timestamp = DateTime.Now;
+
+            _batchDispatchRepo.saveBatchDispatch(batch);
+
+
+            foreach (var item in inventoryList)
+            {
+                BatchDispatchDetail detail = new BatchDispatchDetail();
+
+                detail.batchDispatchID = batch.batchDispatchID;
+                detail.barcode = item.barcode;
+                detail.quantity = toSendQty(item.currentStock, item.afterUpdateStock);
+
+                _batchDispatchDetailRepo.quickSaveBatchDispatchDetail(detail);
+            }
+
+            //_batchDispatchDetailRepo.saveContext();
+
             return View();
+        }
+
+        private int toSendQty(int current_Stock, int initial_value)
+        {
+            int tempnewbatch;
+            if (initial_value == 0) //Product is taken off the shelf and does not exist for sale
+            {
+                return 0;
+            }
+            double time_val = (double)(initial_value - current_Stock) / (double)initial_value; //not initial value/2 as we do this for 15 days
+            int newbatch;
+            if (time_val >= 0.9)
+            {
+                tempnewbatch = (int)(time_val - 0.9) * initial_value + initial_value;
+            }
+            else
+            {
+                tempnewbatch = (int)(1 + time_val) * initial_value / 2;
+            }
+            if ((tempnewbatch - current_Stock) > 50)
+                newbatch = tempnewbatch - current_Stock; //minimum batch is of 50 items
+            else
+                newbatch = 0;
+            return newbatch;
         }
 
         public ActionResult Index()

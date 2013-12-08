@@ -12,7 +12,7 @@ namespace HQServer.Domain.Entities
         [Key, Column(Order = 0)]
         public int batchResponseID { get; set; }
         [Key, Column(Order = 1)]
-        public int barcode { get; set; }
+        public string barcode { get; set; }
         public int quantity { get; set; }
     }
 }
