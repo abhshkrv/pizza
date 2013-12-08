@@ -12,5 +12,8 @@ namespace HQServer.Domain.Abstract
         IQueryable<BatchDispatchDetail> BatchDispatchDetails { get; }
         void saveBatchDispatchDetail(BatchDispatchDetail batchDispatchDetail);
         void deleteBatchDispatchDetail(BatchDispatchDetail batchDispatchDetail);
+
+        void quickSaveBatchDispatchDetail(BatchDispatchDetail detail);
+        void saveContext();
     }
 }

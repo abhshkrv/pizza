@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace HQServer.WebUI.Controllers
 {
@@ -98,7 +99,7 @@ namespace HQServer.WebUI.Controllers
             return "Success";
         }
 
-        public ActionResult dispatchItems(string shopID)
+        public ContentResult dispatchItems(string shopID)
         {
             var inventoryList = _outletInventoryRepo.OutletInventories.Where(o => o.outletID.ToString() == shopID).ToArray();
 
@@ -109,6 +110,7 @@ namespace HQServer.WebUI.Controllers
 
             _batchDispatchRepo.saveBatchDispatch(batch);
 
+            var qtyList = new Dictionary<string, int>();
 
             foreach (var item in inventoryList)
             {
@@ -117,13 +119,18 @@ namespace HQServer.WebUI.Controllers
                 detail.batchDispatchID = batch.batchDispatchID;
                 detail.barcode = item.barcode;
                 detail.quantity = toSendQty(item.currentStock, item.afterUpdateStock);
-
+                qtyList.Add(detail.barcode, detail.quantity);
                 _batchDispatchDetailRepo.quickSaveBatchDispatchDetail(detail);
             }
 
-            //_batchDispatchDetailRepo.saveContext();
+            _batchDispatchDetailRepo.saveContext();
 
-            return View();
+            var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
+            return new ContentResult()
+            {
+                Content = serializer.Serialize(qtyList),
+                ContentType = "application/json",
+            };
         }
 
         private int toSendQty(int current_Stock, int initial_value)
