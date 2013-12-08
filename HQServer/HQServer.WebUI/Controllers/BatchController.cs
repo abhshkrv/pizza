@@ -125,6 +125,10 @@ namespace HQServer.WebUI.Controllers
 
                 detail.batchDispatchID = batch.batchDispatchID;
                 detail.barcode = Int32.Parse(item.barcode);
+                if (item.afterUpdateStock != 0)
+                {
+                    ;
+                }
                 detail.quantity = toSendQty(item.currentStock, item.afterUpdateStock);
                 if (detail.quantity != 0)
                 {
@@ -160,7 +164,7 @@ namespace HQServer.WebUI.Controllers
             // Retrieve a reference to a container. 
             CloudBlobContainer container = blobClient.GetContainerReference("stock");
 
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference("myblob1.txt");
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference("stock.txt");
             blockBlob.Properties.ContentType = "application/json";
 
             // Create or overwrite the "myblob" blob with contents from a local file.
@@ -185,7 +189,7 @@ namespace HQServer.WebUI.Controllers
 
         private int toSendQty(int current_Stock, int initial_value)
         {
-            int tempnewbatch;
+            double tempnewbatch;
             if (initial_value == 0) //Product is taken off the shelf and does not exist for sale
             {
                 return 0;
@@ -194,14 +198,15 @@ namespace HQServer.WebUI.Controllers
             int newbatch;
             if (time_val >= 0.9)
             {
-                tempnewbatch = (int)(time_val - 0.9) * initial_value + initial_value;
+                tempnewbatch = (time_val - 0.9) * initial_value + initial_value;
             }
             else
             {
-                tempnewbatch = (int)(1 + time_val) * initial_value / 2;
+                tempnewbatch = (1 + time_val) * initial_value / 2;
             }
-            if ((tempnewbatch - current_Stock) > 50)
-                newbatch = tempnewbatch - current_Stock; //minimum batch is of 50 items
+            int ans = (int)tempnewbatch;
+            if ((ans - current_Stock) > 50)
+                newbatch = ans - current_Stock; //minimum batch is of 50 items
             else
                 newbatch = 0;
             return newbatch;

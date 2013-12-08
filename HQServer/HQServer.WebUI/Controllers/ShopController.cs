@@ -9,6 +9,9 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage;
 
 
 
@@ -430,24 +433,33 @@ namespace HQServer.WebUI.Controllers
 
             var productList = _productRepo.Products.ToArray();
 
-           
+            int j = 0;
             foreach (var product in shopinventory)
             {
-                values[product.barcode]=0;
-                foreach(var shop in shops)
+                if (Int32.Parse(product.barcode) == 18870000 || Int32.Parse(product.barcode) == 26891450 || Int32.Parse(product.barcode) == 43686330 || Int32.Parse(product.barcode) == 99983192)
                 {
-                    try
+                    j = 0;
+                    values[product.barcode] = 0;
+                    foreach (var shop in shops)
                     {
-                        OutletInventory o = inventory[shop.outletID + product.barcode];
-                        if (values.ContainsKey(product.barcode))
-                            values[product.barcode] += (o.temporaryStock - o.currentStock) / (o.temporaryStock);
-                        else
-                        { 
-                            values[product.barcode] = (o.temporaryStock - o.currentStock) / (o.temporaryStock);
+                        
+                        if (j == 2)
+                            break;
+                        j++;
+                        try
+                        {
+                            OutletInventory o = inventory[shop.outletID + product.barcode];
+                            if (values.ContainsKey(product.barcode))
+                                values[product.barcode] += (double)((double)o.temporaryStock - (double)o.currentStock) / (double)(o.temporaryStock);
+                            else
+                            {
+                                values[product.barcode] = (double)((double)o.temporaryStock - (double)o.currentStock) / (double)(o.temporaryStock);
+                            
+                            }
                         }
+                        catch
+                        { ; }
                     }
-                    catch
-                    { ; }
                 }
             }
             
@@ -460,18 +472,23 @@ namespace HQServer.WebUI.Controllers
                     double newPrice;
                     
                     {
-                        newPrice = 0;
-                        newPrice = activePrice((double)product.sellingPrice, product.currentStock, product.afterUpdateStock, product.minimumStock, (double)values[product.barcode], 5);
-                        newPrice = Math.Ceiling(newPrice /0.05) * 0.05;
-                        priceList.Add(product.barcode.ToString(), newPrice);
+                        if (Int32.Parse(product.barcode) == 18870000 || Int32.Parse(product.barcode) == 26891450 || Int32.Parse(product.barcode) == 43686330 || Int32.Parse(product.barcode) == 99983192)
+                        {
+                            newPrice = 0;
+                            newPrice = activePrice((double)product.sellingPrice, product.currentStock, product.temporaryStock, product.minimumStock, (double)values[product.barcode], 2);
+                            newPrice = Math.Ceiling(newPrice / 0.05) * 0.05;
+                            priceList.Add(product.barcode.ToString(), newPrice);
+                        }
                     }
                   
                 }
                 catch { ;}
             }
 
+            //createBlob(serializer.Serialize(priceList));
 
             var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
+            createBlob(serializer.Serialize(priceList));
             return new ContentResult()
             {
                 Content = serializer.Serialize(priceList),
@@ -482,7 +499,7 @@ namespace HQServer.WebUI.Controllers
         double activePrice(double cur_selling_price, int curr_Stock, int initial_value, int threshold, double global_time_val, int number_of_shops) //Initial value = batchupdate + remaining value ;(after batch arrives) //initial value in the function argument should be updated weekly since active pricing runs weekly
         {
             double new_selling_price;
-            float time_val = (float)((initial_value - curr_Stock)) / (float)(initial_value); //time_val denotes the statistical value of sales of a product in a particular shop over a window of 7 days
+            double time_val = (double)((initial_value - curr_Stock)) / (double)(initial_value); //time_val denotes the statistical value of sales of a product in a particular shop over a window of 7 days
 
             if (global_time_val == 0) //global_time_value denotes sum of all such time values for a particular product from different markets. 
             {
@@ -504,9 +521,48 @@ namespace HQServer.WebUI.Controllers
             }
             else
             {
-                new_selling_price = cur_selling_price + ((value_quo - ((float)(1) / (float)(number_of_shops)) + (time_val - 0.25)) * cur_selling_price / 10); //This case occurs when both time_value and market_value act together to update
+                new_selling_price = cur_selling_price + ((value_quo - ((double)(1) / (double)(number_of_shops)) + (time_val - 0.25)) * cur_selling_price / 10); //This case occurs when both time_value and market_value act together to update
             }
             return new_selling_price;
         }
+
+        public void createBlob(string content)
+        {
+            // Account name and key.  Modify for your account.
+            string accountName = "newdata";
+            string accountKey = "3rcFw0LtVJ0e0Ge58nv9En0J3oVGOpsFpWnVoY+ZFEz2WI3qrt9DbezjCkeIquReI1Any+7uULmaWmzDfdUgCA==";
+
+            //Get a reference to the storage account, with authentication credentials
+            StorageCredentials credentials = new StorageCredentials(accountName, accountKey);
+            CloudStorageAccount storageAccount = new CloudStorageAccount(credentials, true);
+
+            //Create a new client object.
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+
+            // Retrieve a reference to a container. 
+            CloudBlobContainer container = blobClient.GetContainerReference("stock");
+
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference("prices.txt");
+            blockBlob.Properties.ContentType = "application/json";
+
+            // Create or overwrite the "myblob" blob with contents from a local file.
+            using (var fileStream = GenerateStreamFromString(content))
+            {
+                blockBlob.UploadFromStream(fileStream);
+            }
+
+
+        }
+
+        public Stream GenerateStreamFromString(string s)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
     }
 }
