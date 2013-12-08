@@ -78,10 +78,12 @@ namespace HQServer.WebUI.Controllers
             return View(req);
         }
 
-        public ActionResult viewRequest(string id)
+        public ActionResult viewRequest(string ResponseID)
         {
             //BatchResponse br = _batchResponseRepo.BatchResponses.FirstOrDefault(b => b.requestID.ToString() == requestID & b.outletID.ToString() == outletID);
-            var batchResponseDetails = _batchResponseDetailRepo.BatchResponseDetails.Where(b => b.batchResponseID.ToString() == id).ToList();
+            //string ids = id.ToString();
+            int iid = Int16.Parse(ResponseID);
+            var batchResponseDetails = _batchResponseDetailRepo.BatchResponseDetails.Where(b => b.batchResponseID ==iid).ToList();
 
             return View(batchResponseDetails);
         }
@@ -140,7 +142,7 @@ namespace HQServer.WebUI.Controllers
             _batchDispatchDetailRepo.saveContext();
 
             var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
-            createBlob(serializer.Serialize(qtyList));
+            createBlob(serializer.Serialize(qtyList),shopID);
             return new ContentResult()
             {
                 Content = serializer.Serialize(qtyList),
@@ -148,7 +150,7 @@ namespace HQServer.WebUI.Controllers
             };
         }
 
-        public void createBlob(string content)
+        public void createBlob(string content, string shopID)
         {
             // Account name and key.  Modify for your account.
             string accountName = "newdata";
@@ -164,7 +166,7 @@ namespace HQServer.WebUI.Controllers
             // Retrieve a reference to a container. 
             CloudBlobContainer container = blobClient.GetContainerReference("stock");
 
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference("stock.txt");
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference("stock"+shopID+".txt");
             blockBlob.Properties.ContentType = "application/json";
 
             // Create or overwrite the "myblob" blob with contents from a local file.

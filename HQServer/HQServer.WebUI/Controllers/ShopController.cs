@@ -237,7 +237,7 @@ namespace HQServer.WebUI.Controllers
             outletTransaction.outletID = (int)raw["OutletID"];
             outletTransaction.transactionSummaryID = i;
             JArray transactionArray = (JArray)raw["TransactionDetails"];
-           
+
 
             foreach (var t in transactionArray)
             {
@@ -418,19 +418,19 @@ namespace HQServer.WebUI.Controllers
         {
             //DateTime dt = DateTime.Parse(date);
             int id = Int32.Parse(shopID);
-           // var tid = _outletTransactionRepo.OutletTransactions.First(o => o.outletID == id && dt.Day == o.date.Day && dt.Month == o.date.Month && dt.Year == o.date.Year).transactionSummaryID;
+            // var tid = _outletTransactionRepo.OutletTransactions.First(o => o.outletID == id && dt.Day == o.date.Day && dt.Month == o.date.Month && dt.Year == o.date.Year).transactionSummaryID;
 
-           // var outletTransactionDetails = _outletTransactionDetailRepo.OutletTransactionDetails.Where(o => o.transactionSummaryID == tid).ToDictionary(t => t.barcode);
+            // var outletTransactionDetails = _outletTransactionDetailRepo.OutletTransactionDetails.Where(o => o.transactionSummaryID == tid).ToDictionary(t => t.barcode);
 
             //var outletTransactionDetailsbyShop = _outletTransactionDetailRepo.OutletTransactionDetails.ToDictionary(t=>t.outletID);
 
             //var fullOutletInventories = _outletInventoryRepo.OutletInventories.ToDictionary(t=>t.outletID.ToString()+t.barcode);
 
-           //var fullDetails = _outletTransactionDetailRepo.OutletTransactionDetails.ToDictionary(t => t.outletID.ToString() + t.barcode.ToString());
+            //var fullDetails = _outletTransactionDetailRepo.OutletTransactionDetails.ToDictionary(t => t.outletID.ToString() + t.barcode.ToString());
 
             var shopinventory = _outletInventoryRepo.OutletInventories.Where(o => o.outletID == id).ToArray();
             var shops = _outletRepo.Outlets.ToArray();
-            var inventory = _outletInventoryRepo.OutletInventories.ToDictionary(s =>(s.outletID.ToString()+s.barcode.ToString()));
+            var inventory = _outletInventoryRepo.OutletInventories.ToDictionary(s => (s.outletID.ToString() + s.barcode.ToString()));
             var productDetails = _productRepo.Products.ToDictionary(p => p.barcode);
 
             Dictionary<string, double> priceList = new Dictionary<string, double>();
@@ -441,51 +441,48 @@ namespace HQServer.WebUI.Controllers
             int j = 0;
             foreach (var product in shopinventory)
             {
-                if (Int32.Parse(product.barcode) == 18870000 || Int32.Parse(product.barcode) == 26891450 || Int32.Parse(product.barcode) == 43686330 || Int32.Parse(product.barcode) == 99983192)
+                if (product.afterUpdateStock == 0)
+                    continue;
+                j = 0;
+                values[product.barcode] = 0;
+                foreach (var shop in shops)
                 {
-                    j = 0;
-                    values[product.barcode] = 0;
-                    foreach (var shop in shops)
+                    
+                    if (j == 2)
+                        break;
+                    j++;
+                    try
                     {
-                        
-                        if (j == 2)
-                            break;
-                        j++;
-                        try
+                        OutletInventory o = inventory[shop.outletID + product.barcode];
+                        if (values.ContainsKey(product.barcode))
+                            values[product.barcode] += (double)((double)o.temporaryStock - (double)o.currentStock) / (double)(o.temporaryStock);
+                        else
                         {
-                            OutletInventory o = inventory[shop.outletID + product.barcode];
-                            if (values.ContainsKey(product.barcode))
-                                values[product.barcode] += (double)((double)o.temporaryStock - (double)o.currentStock) / (double)(o.temporaryStock);
-                            else
-                            {
-                                values[product.barcode] = (double)((double)o.temporaryStock - (double)o.currentStock) / (double)(o.temporaryStock);
-                            
-                            }
+                            values[product.barcode] = (double)((double)o.temporaryStock - (double)o.currentStock) / (double)(o.temporaryStock);
                         }
-                        catch
-                        { ; }
                     }
+                    catch
+                    { ; }
                 }
             }
-            
+
+
             int i = 0;
             foreach (var product in shopinventory)
             {
-
+                if (product.afterUpdateStock == 0)
+                    continue;
                 try
                 {
                     double newPrice;
-                    
+
                     {
-                        if (Int32.Parse(product.barcode) == 18870000 || Int32.Parse(product.barcode) == 26891450 || Int32.Parse(product.barcode) == 43686330 || Int32.Parse(product.barcode) == 99983192)
-                        {
                             newPrice = 0;
                             newPrice = activePrice((double)product.sellingPrice, product.currentStock, product.temporaryStock, product.minimumStock, (double)values[product.barcode], 2);
                             newPrice = Math.Ceiling(newPrice / 0.05) * 0.05;
                             priceList.Add(product.barcode.ToString(), newPrice);
-                        }
                     }
-                  
+
                 }
                 catch { ;}
             }
@@ -493,7 +490,7 @@ namespace HQServer.WebUI.Controllers
             //createBlob(serializer.Serialize(priceList));
 
             var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
-            createBlob(serializer.Serialize(priceList));
+            createBlob(serializer.Serialize(priceList),shopID);
             return new ContentResult()
             {
                 Content = serializer.Serialize(priceList),
@@ -531,7 +528,7 @@ namespace HQServer.WebUI.Controllers
             return new_selling_price;
         }
 
-        public void createBlob(string content)
+        public void createBlob(string content, string shopID)
         {
             // Account name and key.  Modify for your account.
             string accountName = "newdata";
@@ -547,7 +544,7 @@ namespace HQServer.WebUI.Controllers
             // Retrieve a reference to a container. 
             CloudBlobContainer container = blobClient.GetContainerReference("stock");
 
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference("prices.txt");
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference("prices"+shopID+".txt");
             blockBlob.Properties.ContentType = "application/json";
 
             // Create or overwrite the "myblob" blob with contents from a local file.
