@@ -11,6 +11,8 @@ namespace HQServer.Domain.Concrete
 {
     public class EFDbContext : DbContext
     {
+        public DbSet<BatchDispatch> BatchDispatchs { get; set; }
+        public DbSet<BatchDispatchDetail> BatchDispatchDetails { get; set; }
         public DbSet<BatchResponse> BatchResponses { get; set; }
         public DbSet<BatchResponseDetail> BatchResponseDetails { get; set; }
         public DbSet<Category> Categories { get; set; }

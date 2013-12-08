@@ -63,6 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\IBatchDispatchRepository.cs" />
+    <Compile Include="Abstract\IBatchDispatchDetailRepository.cs" />
     <Compile Include="Abstract\IBatchResponseRepository.cs" />
     <Compile Include="Abstract\IBatchResponseDetailRepository.cs" />
     <Compile Include="Abstract\IMemberRepository.cs" />
@@ -75,6 +77,8 @@
     <Compile Include="Abstract\ICategoryRepository.cs" />
     <Compile Include="Abstract\IManufacturerRepository.cs" />
     <Compile Include="Abstract\IProductRepository.cs" />
+    <Compile Include="Concrete\EFBatchDispatchDetailRepository.cs" />
+    <Compile Include="Concrete\EFBatchDispatchRepository.cs" />
     <Compile Include="Concrete\EFBatchResponseDetailRepository.cs" />
     <Compile Include="Concrete\EFBatchResponseRepository.cs" />
     <Compile Include="Concrete\EFCategoryRepository.cs" />
@@ -92,6 +96,8 @@
     <Compile Include="Entities\BatchResponseDetail.cs" />
     <Compile Include="Entities\Cart.cs" />
     <Compile Include="Entities\Category.cs" />
+    <Compile Include="Entities\BatchDispatch.cs" />
+    <Compile Include="Entities\BatchDispatchDetail.cs" />
     <Compile Include="Entities\Manufacturer.cs" />
     <Compile Include="Entities\Member.cs" />
     <Compile Include="Entities\OnlineTransaction.cs" />

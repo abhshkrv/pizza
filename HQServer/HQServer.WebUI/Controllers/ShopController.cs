@@ -142,23 +142,23 @@ namespace HQServer.WebUI.Controllers
             return View(viewModel);
         }
 
-       /* public ActionResult TestCharts()
-        {
-            DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
-                .SetXAxis(new XAxis
-                {
-                    Categories = new[] { "Jan", "Feb", "Mar", "Apr", "May" }
-                })
-                .SetSeries(new Series
-                {
-                    Type = ChartTypes.Pie,
-                    //Name =  { "Jan", "Feb", "Mar", "Apr", "May" },
+        /* public ActionResult TestCharts()
+         {
+             DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
+                 .SetXAxis(new XAxis
+                 {
+                     Categories = new[] { "Jan", "Feb", "Mar", "Apr", "May" }
+                 })
+                 .SetSeries(new Series
+                 {
+                     Type = ChartTypes.Pie,
+                     //Name =  { "Jan", "Feb", "Mar", "Apr", "May" },
 
-                    Data = new Data(new object[] { 29.9, 71.5, 106.4, 129.2, 45 })
-                });
+                     Data = new Data(new object[] { 29.9, 71.5, 106.4, 129.2, 45 })
+                 });
 
-            return View(chart);
-        } */
+             return View(chart);
+         } */
 
         public ViewResult Edit(int outletId)
         {
@@ -249,13 +249,13 @@ namespace HQServer.WebUI.Controllers
         [HttpPost]
         public string UploadOutletInventory(string input = null)
         {
-           /* var i = 0;
+            /* var i = 0;
 
-            if (_outletInventoryRepo.OutletInventories.Count() == 0)
-                i = 1;
-            else
-             ;//   i = _outletInventoryRepo.OutletInventories.OrderByDescending(x => x.).First().transactionSummaryID + 1;
-            */
+             if (_outletInventoryRepo.OutletInventories.Count() == 0)
+                 i = 1;
+             else
+              ;//   i = _outletInventoryRepo.OutletInventories.OrderByDescending(x => x.).First().transactionSummaryID + 1;
+             */
             JObject raw = JObject.Parse(input);
             int outletID = (int)raw["ShopID"];
 
@@ -265,7 +265,7 @@ namespace HQServer.WebUI.Controllers
             var outletInventoryList = new Dictionary<Tuple<int, string>, OutletInventory>();
 
             var outletInventoriesArray = _outletInventoryRepo.OutletInventories.ToArray();
-            var outletInventoryDictionary = _outletInventoryRepo.OutletInventories.ToDictionary(t=>t.outletID.ToString()+t.barcode);
+            var outletInventoryDictionary = _outletInventoryRepo.OutletInventories.ToDictionary(t => t.outletID.ToString() + t.barcode);
             foreach (var item in outletInventoriesArray)
             {
                 Tuple<int, string> t = new Tuple<int, string>(item.outletID, item.barcode);
@@ -285,7 +285,7 @@ namespace HQServer.WebUI.Controllers
                 Tuple<int, string> k = new Tuple<int, string>(outletID, barcode);
                 if (outletInventoryList.ContainsKey(k))
                 {
-                    outletInventory = outletInventoryDictionary[outletID.ToString()+barcode];
+                    outletInventory = outletInventoryDictionary[outletID.ToString() + barcode];
                     //outletInventory.outletID = outletID;
                     //outletInventory.barcode = barcode;
                     outletInventory.currentStock = currentStock;
@@ -460,9 +460,9 @@ namespace HQServer.WebUI.Controllers
                     else
                     {
                         newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, 0, values[product.barcode.ToString()], 10000, productDetails[product.barcode.ToString()].costPrice);
-                       // newPrice = Math.Ceiling(newPrice /0.05) * .05;
+                        // newPrice = Math.Ceiling(newPrice /0.05) * .05;
                         priceList.Add(product.barcode.ToString(), newPrice);
-                   
+
                     }
                 }
                 catch { ;}
@@ -477,39 +477,32 @@ namespace HQServer.WebUI.Controllers
             };
         }
 
-        public decimal activePrice(decimal cur_selling_price, int curr_qty, int threshold, int units_sold, decimal global_sales_value, int max_stock, decimal cost_price)
+        double activeprice(double cur_selling_price, int curr_Stock, int initial_value, int threshold, double global_time_val, int number_of_shops) //Initial value = batchupdate + remaining value ;(after batch arrives) //initial value in the function argument should be updated weekly since active pricing runs weekly
         {
-            decimal new_selling_price=0;
-            if ((global_sales_value == 0) || (units_sold == 0))
-            {
-                new_selling_price = (3 * cur_selling_price) / 4;
-                return new_selling_price;
-            }
-            decimal value_quo = (cur_selling_price * units_sold) / global_sales_value;
-            if (value_quo == 1)
-            {
-                value_quo /= 10;
-            }
-            else 
-            {
-                value_quo /= 5;
-            }
-            if (curr_qty < 1.1 * threshold)
-                new_selling_price = cost_price;
-            //new_selling_price = 1.25 * cost_price;
+            double new_selling_price;
+            float time_val = (float)((initial_value - curr_Stock)) / (float)(initial_value); //time_val denotes the statistical value of sales of a product in a particular shop over a window of 7 days
 
-            else if (curr_qty < 1.5 * threshold)
+            if (global_time_val == 0) //global_time_value denotes sum of all such time values for a particular product from different markets. 
             {
-                new_selling_price = cur_selling_price + value_quo * value_quo * cur_selling_price;
+                new_selling_price = 0.99 * cur_selling_price;
+                return new_selling_price;// This case occurs when there is absolutely no sales of a product in any market
             }
 
-            else if (curr_qty >= 0.9 * max_stock)
+            double value_quo = time_val / global_time_val; //value_quo denotes the sales value of a particular market for a particular product
+
+            if ((time_val == 0) && (value_quo == 0))
             {
-                new_selling_price = cur_selling_price - value_quo * cur_selling_price;
+                new_selling_price = 0.98 * cur_selling_price;
+                return new_selling_price;//This case occurs when a particular market does not have any sale of a product but other markets do
+            }
+            if (curr_Stock < 1.1 * threshold)
+            {
+                new_selling_price = 1.25 * cur_selling_price;
+                return new_selling_price;//This case occurs when there is too much less stock for reserve in a particular market
             }
             else
             {
-                new_selling_price = cur_selling_price - value_quo * value_quo * cur_selling_price;
+                new_selling_price = cur_selling_price + ((value_quo - ((float)(1) / (float)(number_of_shops)) + (time_val - 0.5)) * cur_selling_price / 10); //This case occurs when both time_value and market_value act together to update
             }
             return new_selling_price;
         }
