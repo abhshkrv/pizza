@@ -407,65 +407,56 @@ namespace HQServer.WebUI.Controllers
         {
             DateTime dt = DateTime.Parse(date);
             int id = Int32.Parse(shopID);
-            var tid = _outletTransactionRepo.OutletTransactions.First(o => o.outletID == id && dt.Day == o.date.Day && dt.Month == o.date.Month && dt.Year == o.date.Year).transactionSummaryID;
+           // var tid = _outletTransactionRepo.OutletTransactions.First(o => o.outletID == id && dt.Day == o.date.Day && dt.Month == o.date.Month && dt.Year == o.date.Year).transactionSummaryID;
 
-            var outletTransactionDetails = _outletTransactionDetailRepo.OutletTransactionDetails.Where(o => o.transactionSummaryID == tid).ToDictionary(t => t.barcode);
+           // var outletTransactionDetails = _outletTransactionDetailRepo.OutletTransactionDetails.Where(o => o.transactionSummaryID == tid).ToDictionary(t => t.barcode);
 
             //var outletTransactionDetailsbyShop = _outletTransactionDetailRepo.OutletTransactionDetails.ToDictionary(t=>t.outletID);
 
-            var fullDetails = _outletTransactionDetailRepo.OutletTransactionDetails.ToDictionary(t => t.outletID.ToString() + t.barcode.ToString());
+            //var fullOutletInventories = _outletInventoryRepo.OutletInventories.ToDictionary(t=>t.outletID.ToString()+t.barcode);
+
+           //var fullDetails = _outletTransactionDetailRepo.OutletTransactionDetails.ToDictionary(t => t.outletID.ToString() + t.barcode.ToString());
 
             var shopinventory = _outletInventoryRepo.OutletInventories.Where(o => o.outletID == id).ToArray();
             var shops = _outletRepo.Outlets.ToArray();
             //var inventory = _outletInventoryRepo.OutletInventories.ToDictionary(s =>(s.outletID.ToString()+s.barcode.ToString()));
             var productDetails = _productRepo.Products.ToDictionary(p => p.barcode);
 
-            Dictionary<string, decimal> priceList = new Dictionary<string, decimal>();
-            Dictionary<string, decimal> values = new Dictionary<string, decimal>();
+            Dictionary<string, double> priceList = new Dictionary<string, double>();
+            Dictionary<string, double> values = new Dictionary<string, double>();
 
             var productList = _productRepo.Products.ToArray();
 
-            foreach (var p in productList)
+           
+            foreach (var product in shopinventory)
             {
-                decimal value = 0;
-                foreach (var shop in shops)
+                values[product.barcode]=0;
+                foreach(var shop in shops)
                 {
                     try
                     {
-                        value = value + fullDetails[shop.outletID.ToString() + p.barcode.ToString()].cost;
-
+                        values[product.barcode] += (product.temporaryStock - product.currentStock) / (product.temporaryStock);
                     }
                     catch
-                    {
-                        //values[p.barcode.ToString()] = 0;
-                    }
-
+                    { ; }
                 }
-                values[p.barcode.ToString()] = value;
             }
-
+            
             int i = 0;
             foreach (var product in shopinventory)
             {
 
                 try
                 {
-                    decimal newPrice;
-                    if (outletTransactionDetails.ContainsKey(product.barcode))
+                    double newPrice;
+                    
                     {
                         newPrice = 0;
-                        //newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, outletTransactionDetails[product.barcode].unitSold, values[product.barcode.ToString()], 10000, productDetails[product.barcode.ToString()].costPrice);
-                        //newPrice = Math.Ceiling(newPrice /0.05) * 0.05;
+                        newPrice = activePrice((double)product.sellingPrice, product.currentStock, product.afterUpdateStock, product.minimumStock, (double)values[product.barcode], 5);
+                        newPrice = Math.Ceiling(newPrice /0.05) * 0.05;
                         priceList.Add(product.barcode.ToString(), newPrice);
                     }
-                    else
-                    {
-                        newPrice = 0;
-                       // newPrice = activePrice(product.sellingPrice, product.currentStock, product.minimumStock, 0, values[product.barcode.ToString()], 10000, productDetails[product.barcode.ToString()].costPrice);
-                        // newPrice = Math.Ceiling(newPrice /0.05) * .05;
-                        priceList.Add(product.barcode.ToString(), newPrice);
-
-                    }
+                  
                 }
                 catch { ;}
             }
@@ -504,7 +495,7 @@ namespace HQServer.WebUI.Controllers
             }
             else
             {
-                new_selling_price = cur_selling_price + ((value_quo - ((float)(1) / (float)(number_of_shops)) + (time_val - 0.5)) * cur_selling_price / 10); //This case occurs when both time_value and market_value act together to update
+                new_selling_price = cur_selling_price + ((value_quo - ((float)(1) / (float)(number_of_shops)) + (time_val - 0.25)) * cur_selling_price / 10); //This case occurs when both time_value and market_value act together to update
             }
             return new_selling_price;
         }

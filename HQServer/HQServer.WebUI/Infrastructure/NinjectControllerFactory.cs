@@ -32,6 +32,8 @@ namespace HQServer.WebUI.Infrastructure
             ninjectKernel.Bind<ICategoryRepository>().To<EFCategoryRepository>();
             ninjectKernel.Bind<IBatchResponseDetailRepository>().To<EFBatchResponseDetailRepository>();
             ninjectKernel.Bind<IBatchResponseRepository>().To<EFBatchResponseRepository>();
+            ninjectKernel.Bind<IBatchDispatchDetailRepository>().To<EFBatchDispatchDetailRepository>();
+            ninjectKernel.Bind<IBatchDispatchRepository>().To<EFBatchDispatchRepository>();
             ninjectKernel.Bind<IOutletInventoryRepository>().To < EFOutletInventoryRepository>();
             ninjectKernel.Bind<IOutletRepository>().To<EFOutletRepository>();
             ninjectKernel.Bind<IOutletTransactionRepository>().To<EFOutletTransactionRepository>();

@@ -101,7 +101,8 @@ namespace HQServer.WebUI.Controllers
 
         public ContentResult dispatchItems(string shopID)
         {
-            var inventoryList = _outletInventoryRepo.OutletInventories.Where(o => o.outletID.ToString() == shopID).ToArray();
+            int id = Int16.Parse(shopID);
+            var inventoryList = _outletInventoryRepo.OutletInventories.Where(o => o.outletID == id).ToArray();
 
             BatchDispatch batch = new BatchDispatch();
             batch.outletID = Int32.Parse(shopID);
@@ -119,8 +120,11 @@ namespace HQServer.WebUI.Controllers
                 detail.batchDispatchID = batch.batchDispatchID;
                 detail.barcode = Int32.Parse(item.barcode);
                 detail.quantity = toSendQty(item.currentStock, item.afterUpdateStock);
-                qtyList.Add(detail.barcode.ToString(), detail.quantity);
-                _batchDispatchDetailRepo.quickSaveBatchDispatchDetail(detail);
+                if (detail.quantity != 0)
+                {
+                    qtyList.Add(detail.barcode.ToString(), detail.quantity);
+                    _batchDispatchDetailRepo.quickSaveBatchDispatchDetail(detail);
+                }
             }
 
             _batchDispatchDetailRepo.saveContext();
