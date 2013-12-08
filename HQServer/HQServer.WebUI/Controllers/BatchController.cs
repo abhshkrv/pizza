@@ -55,7 +55,7 @@ namespace HQServer.WebUI.Controllers
 
                 _batchResponseRepo.saveBatchResponse(batchResponse);
                 batchResponseDetail.batchResponseID = batchResponse.batchResponseID;
-                batchResponseDetail.barcode = barcode;
+                batchResponseDetail.barcode = Int32.Parse(barcode);
                 batchResponseDetail.quantity = Int32.Parse(qty);
                 _batchResponseDetailRepo.saveBatchResponseDetail(batchResponseDetail);
                 return new ContentResult()
@@ -117,9 +117,9 @@ namespace HQServer.WebUI.Controllers
                 BatchDispatchDetail detail = new BatchDispatchDetail();
 
                 detail.batchDispatchID = batch.batchDispatchID;
-                detail.barcode = item.barcode;
+                detail.barcode = Int32.Parse(item.barcode);
                 detail.quantity = toSendQty(item.currentStock, item.afterUpdateStock);
-                qtyList.Add(detail.barcode, detail.quantity);
+                qtyList.Add(detail.barcode.ToString(), detail.quantity);
                 _batchDispatchDetailRepo.quickSaveBatchDispatchDetail(detail);
             }
 
