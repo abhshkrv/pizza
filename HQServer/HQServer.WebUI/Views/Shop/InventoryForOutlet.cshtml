@@ -3,44 +3,51 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>InventoryForOutlet</h2>
-<table class="Grid">
-    <tr>
-
-        <th>
-            Barcode
-        </th>
-
-        <th>
-            Selling Price
-        </th>
-
-        <th>
-            Cur stock
-        </th>
-        <th>
-            Min stock
-        </th>
-        <th>
-            discount
-        </th>
-
-    </tr>
-@{ 
-  foreach (var item in Model.Inventory) {
-    
-    <tr>
-        <td>@item.barcode</td>
-        <td>@item.sellingPrice</td>
-        <td>@item.currentStock</td>
-        <td>@item.minimumStock</td>
-        <td>@item.discountPercentage</td>
-        
-      
-    </tr>
- 
-}
-}
-
-</table>
 <h4>@Html.ActionLink("Return to search criteria", "ViewInventoryForOutlet")</h4>
+
+<div class="col-sm-12 col-md-6 col-md-offset-1">
+    <div class="row">
+        <h2>Inventory for Outlet </h2>
+        <p></p>
+         <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center">Barcode</th>
+                    <th class="text-center">Selling Price</th>
+                    <th class="text-center">Current Stock</th>
+                    <th class="text-center">Min. Stock</th>
+                    <th class="text-center">Discount</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @{
+                    foreach (var item in Model.Inventory)
+                    {
+
+                        <tr>
+                            <td class="col-sm-1 col-md-1">
+                                @item.barcode
+                            </td>
+                            <td class="col-sm-2 col-md-2" style="text-align: center">
+                                @item.sellingPrice.ToString("c")
+                              </td>
+                            <td class="col-sm-2 col-md-2" style="text-align: center">
+                                @item.currentStock
+                             </td>
+                            <td class="col-sm-1 col-md-1">
+                                @item.minimumStock
+                            </td>
+
+                            <td class="col-sm-1 col-md-1">
+                                @item.discountPercentage
+                            </td>
+                        </tr>
+
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
