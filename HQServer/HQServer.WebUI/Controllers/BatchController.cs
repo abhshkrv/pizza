@@ -160,20 +160,16 @@ namespace HQServer.WebUI.Controllers
             // Retrieve a reference to a container. 
             CloudBlobContainer container = blobClient.GetContainerReference("stock");
 
-            CloudPageBlob blockBlob = container.GetPageBlobReference("myblob");
-
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference("myblob1.txt");
+            blockBlob.Properties.ContentType = "application/json";
 
             // Create or overwrite the "myblob" blob with contents from a local file.
-            blockBlob.UploadFromByteArray(GetBytes(content),1024,1024);
+            using (var fileStream = GenerateStreamFromString(content))
+            {
+                blockBlob.UploadFromStream(fileStream);
+            }
 
 
-        }
-
-        public  byte[] GetBytes(string str)
-        {
-            byte[] bytes = new byte[str.Length * sizeof(char)];
-            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
         }
 
         public Stream GenerateStreamFromString(string s)
