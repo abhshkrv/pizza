@@ -1,11 +1,17 @@
 ﻿using HQServer.Domain.Abstract;
 using HQServer.Domain.Entities;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Blob;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+
+
 
 namespace HQServer.WebUI.Controllers
 {
@@ -130,12 +136,56 @@ namespace HQServer.WebUI.Controllers
             _batchDispatchDetailRepo.saveContext();
 
             var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
+            createBlob(serializer.Serialize(qtyList));
             return new ContentResult()
             {
                 Content = serializer.Serialize(qtyList),
                 ContentType = "application/json",
             };
         }
+
+        public void createBlob(string content)
+        {
+            // Account name and key.  Modify for your account.
+            string accountName = "newdata";
+            string accountKey = "3rcFw0LtVJ0e0Ge58nv9En0J3oVGOpsFpWnVoY+ZFEz2WI3qrt9DbezjCkeIquReI1Any+7uULmaWmzDfdUgCA==";
+
+            //Get a reference to the storage account, with authentication credentials
+            StorageCredentials credentials = new StorageCredentials(accountName, accountKey);
+            CloudStorageAccount storageAccount = new CloudStorageAccount(credentials, true);
+
+            //Create a new client object.
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+
+            // Retrieve a reference to a container. 
+            CloudBlobContainer container = blobClient.GetContainerReference("stock");
+
+            CloudPageBlob blockBlob = container.GetPageBlobReference("myblob");
+
+
+            // Create or overwrite the "myblob" blob with contents from a local file.
+            blockBlob.UploadFromByteArray(GetBytes(content),1024,1024);
+
+
+        }
+
+        public  byte[] GetBytes(string str)
+        {
+            byte[] bytes = new byte[str.Length * sizeof(char)];
+            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
+
+        public Stream GenerateStreamFromString(string s)
+        {
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
 
         private int toSendQty(int current_Stock, int initial_value)
         {

@@ -11,6 +11,8 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 
 
+
+
 namespace HQServer.WebUI.Controllers
 {
     public class ShopController : Controller
@@ -227,7 +229,7 @@ namespace HQServer.WebUI.Controllers
             outletTransaction.outletID = (int)raw["OutletID"];
             outletTransaction.transactionSummaryID = i;
             JArray transactionArray = (JArray)raw["TransactionDetails"];
-
+           
 
             foreach (var t in transactionArray)
             {
@@ -236,6 +238,7 @@ namespace HQServer.WebUI.Controllers
                 outletTransactionDetail.barcode = (string)t["Key"];
                 outletTransactionDetail.unitSold = (int)t["Value"]["quantity"];
                 outletTransactionDetail.cost = (decimal)t["Value"]["unitPrice"];
+                outletTransactionDetail.outletID = (int)t["Value"]["outletID"];
                 _outletTransactionDetailRepo.quickSaveOutletTransactionDetail(outletTransactionDetail);
             }
 
@@ -405,7 +408,7 @@ namespace HQServer.WebUI.Controllers
 
         public ContentResult getNewPrices(string shopID, string date)
         {
-            DateTime dt = DateTime.Parse(date);
+            //DateTime dt = DateTime.Parse(date);
             int id = Int32.Parse(shopID);
            // var tid = _outletTransactionRepo.OutletTransactions.First(o => o.outletID == id && dt.Day == o.date.Day && dt.Month == o.date.Month && dt.Year == o.date.Year).transactionSummaryID;
 
@@ -419,7 +422,7 @@ namespace HQServer.WebUI.Controllers
 
             var shopinventory = _outletInventoryRepo.OutletInventories.Where(o => o.outletID == id).ToArray();
             var shops = _outletRepo.Outlets.ToArray();
-            //var inventory = _outletInventoryRepo.OutletInventories.ToDictionary(s =>(s.outletID.ToString()+s.barcode.ToString()));
+            var inventory = _outletInventoryRepo.OutletInventories.ToDictionary(s =>(s.outletID.ToString()+s.barcode.ToString()));
             var productDetails = _productRepo.Products.ToDictionary(p => p.barcode);
 
             Dictionary<string, double> priceList = new Dictionary<string, double>();
@@ -435,7 +438,13 @@ namespace HQServer.WebUI.Controllers
                 {
                     try
                     {
-                        values[product.barcode] += (product.temporaryStock - product.currentStock) / (product.temporaryStock);
+                        OutletInventory o = inventory[shop.outletID + product.barcode];
+                        if (values.ContainsKey(product.barcode))
+                            values[product.barcode] += (o.temporaryStock - o.currentStock) / (o.temporaryStock);
+                        else
+                        { 
+                            values[product.barcode] = (o.temporaryStock - o.currentStock) / (o.temporaryStock);
+                        }
                     }
                     catch
                     { ; }
