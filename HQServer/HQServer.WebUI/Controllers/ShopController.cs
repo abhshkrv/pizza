@@ -133,6 +133,27 @@ namespace HQServer.WebUI.Controllers
         public int PageSize = 200;
         public ViewResult List(int page = 1)
         {
+
+            decimal shop1 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 1).Select(t => t.cost).Sum();
+            decimal shop2 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 2).Select(t => t.cost).Sum();
+            decimal shop3 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 3).Select(t => t.cost).Sum();
+            decimal shop4 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 4).Select(t => t.cost).Sum();
+            decimal shop5 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 5).Select(t => t.cost).Sum();
+            DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
+                .SetTitle(new Title
+                {
+                    Text = " Revenue for all shops during the month of September 2013"
+                }
+                    )
+                .SetSeries(new Series
+                {
+                    Name = "Revenue",
+                    Type = ChartTypes.Pie,
+
+
+                    Data = new Data(new object[] { new object[] { "Shop1", shop1 }, new object[] { "Shop2", shop2 }, new object[] { "Shop3", shop3 }, new object[] { "Shop4", shop4 }, new object[] { "Shop5", shop5 } })
+                });
+
             OutletsListViewModel viewModel = new OutletsListViewModel
             {
                 Outlets = _outletRepo.Outlets
@@ -144,7 +165,8 @@ namespace HQServer.WebUI.Controllers
                     CurrentPage = page,
                     ItemsPerPage = PageSize,
                     TotalItems = _outletRepo.Outlets.Count()
-                }
+                },
+                chart = chart
             };
 
             return View(viewModel);
@@ -373,14 +395,45 @@ namespace HQServer.WebUI.Controllers
         }
 
         [HttpGet]
-        public ActionResult InventoryForOutlet(int outletID = 0)
+        public ActionResult InventoryForOutlet(int outletID = 0, int page = 1)
         {
+            decimal shop1 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 1).Select(t => t.cost).Sum();
+            decimal shop2 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 2).Select(t => t.cost).Sum();
+            decimal shop3 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 3).Select(t => t.cost).Sum();
+            decimal shop4 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 4).Select(t => t.cost).Sum();
+            decimal shop5 = _outletTransactionDetailRepo.OutletTransactionDetails.Where(t => t.outletID == 5).Select(t => t.cost).Sum();
+            DotNet.Highcharts.Highcharts chart = new DotNet.Highcharts.Highcharts("chart")
+                .SetTitle(new Title
+                {
+                    Text = " Top selling products for outlet" + outletID + " September 2013"
+                }
+                    )
+                .SetSeries(new Series
+                {
+                    Name = "Revenue",
+                    Type = ChartTypes.Bar,
+
+
+                    Data = new Data(new object[] { new object[] { "Shop1", shop1 }, new object[] { "Shop2", shop2 }, new object[] { "Shop3", shop3 }, new object[] { "Shop4", shop4 }, new object[] { "Shop5", shop5 } })
+                });
+
             OutletInventoryViewModel viewModel = new OutletInventoryViewModel();
             String noResults = "No inventory found for ";
 
             if (outletID != 0 && outletID != null)
             {
-                viewModel.Inventory = _outletInventoryRepo.OutletInventories.Where(t => t.outletID == outletID);
+                //viewModel.Inventory = _outletInventoryRepo.OutletInventories.Where(t => t.outletID == outletID);
+                //viewModel.chart = chart;
+
+                viewModel.Inventory = _outletInventoryRepo.OutletInventories.OrderBy(p => p.outletID).Where(t => t.outletID == outletID).Skip((page - 1) * PageSize).Take(PageSize);
+                viewModel.PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = PageSize,
+                    TotalItems = _outletInventoryRepo.OutletInventories.Where(t => t.outletID == outletID).Count()
+                };
+                viewModel.chart = chart;
+                viewModel.currentOutletID = outletID;
                 noResults += "outlet with ID = " + outletID;
             }
 

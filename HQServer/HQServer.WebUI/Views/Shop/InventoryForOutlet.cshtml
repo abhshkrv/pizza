@@ -1,15 +1,16 @@
-﻿@{
+﻿@model HQServer.WebUI.Models.OutletInventoryViewModel
+@{
     ViewBag.Title = "InventoryForOutlet";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h4>@Html.ActionLink("Return to search criteria", "ViewInventoryForOutlet")</h4>
 
-<div class="col-sm-12 col-md-6 col-md-offset-1">
-    <div class="row">
+<div class="row">
+    <div class="col-sm-12 col-md-6">
         <h2>Inventory for Outlet </h2>
         <p></p>
-         <table class="table table-hover">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th class="text-center">Barcode</th>
@@ -25,29 +26,50 @@
                     foreach (var item in Model.Inventory)
                     {
 
-                        <tr>
-                            <td class="col-sm-1 col-md-1">
-                                @item.barcode
-                            </td>
-                            <td class="col-sm-2 col-md-2" style="text-align: center">
-                                @item.sellingPrice.ToString("c")
-                              </td>
-                            <td class="col-sm-2 col-md-2" style="text-align: center">
-                                @item.currentStock
-                             </td>
-                            <td class="col-sm-1 col-md-1">
-                                @item.minimumStock
-                            </td>
+                    <tr>
+                        <td class="col-sm-1 col-md-1">
+                            @item.barcode
+                        </td>
+                        <td class="col-sm-2 col-md-2" style="text-align: center">
+                            @item.sellingPrice.ToString("c")
+                        </td>
+                        <td class="col-sm-2 col-md-2" style="text-align: center">
+                            @item.currentStock
+                        </td>
+                        <td class="col-sm-1 col-md-1">
+                            @item.minimumStock
+                        </td>
 
-                            <td class="col-sm-1 col-md-1">
-                                @item.discountPercentage
-                            </td>
-                        </tr>
+                        <td class="col-sm-1 col-md-1">
+                            @item.discountPercentage
+                        </td>
+                    </tr>
 
                     }
                 }
             </tbody>
         </table>
     </div>
+    <div class="col-sm-12 col-md-5 col-md-offset-1">
+        <br>
+        <br>
+        @Model.chart
+    </div>
 </div>
+
+<ul class="pagination pagination-lg">
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("InventoryForOutlet", new { outletID = @Model.currentOutletID, page = x }))
+</ul>
+
+<ul class="pager">
+    @{ if (@Model.PagingInfo.CurrentPage > @Model.PagingInfo.TotalPages)
+       {
+        <li><a href="#">0 of @Model.PagingInfo.TotalPages </a></li>
+       }
+       else
+       {
+        <li><a href="#">@Model.PagingInfo.CurrentPage of @Model.PagingInfo.TotalPages </a></li>
+       }
+    }
+</ul>
 

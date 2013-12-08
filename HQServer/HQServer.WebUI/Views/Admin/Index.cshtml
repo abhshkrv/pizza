@@ -64,14 +64,18 @@
     </div>
 </div>
 
-
-
-
-
-
-
-
-
-<div class="pager">
+<ul class="pagination pagination-lg">
     @Html.PageLinks(Model.PagingInfo, x => Url.Action("Index", new { page = x }))
-</div>
+</ul>
+
+<ul class="pager">
+    @{ if (@Model.PagingInfo.CurrentPage > @Model.PagingInfo.TotalPages)
+       {
+        <li><a href="#">0 of @Model.PagingInfo.TotalPages </a></li>
+       }
+       else
+       {
+        <li><a href="#">@Model.PagingInfo.CurrentPage of @Model.PagingInfo.TotalPages </a></li>
+       }
+    }
+</ul>

@@ -9,7 +9,8 @@ namespace HQServer.WebUI.Models
     public class OutletInventoryViewModel
     {
         public IEnumerable<OutletInventory> Inventory { get; set; }
-        //public IEnumerable<OutletTransactionDetail> TransactionDetail { get; set; }
+        public DotNet.Highcharts.Highcharts chart { get; set; }
         public PagingInfo PagingInfo { get; set; }
+        public int currentOutletID { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace HQServer.WebUI.Models
     public class OutletsListViewModel
     {
         public IEnumerable<Outlet> Outlets { get; set; }
+        public DotNet.Highcharts.Highcharts chart { get; set; }
         public PagingInfo PagingInfo { get; set; }
     }
 }
