@@ -313,6 +313,8 @@ namespace HQServer.WebUI.Controllers
                 int discountPercentage = (int)t["discount"];
                 int minimumStock = (int)t["minimumStock"];
                 decimal sellingPrice = (decimal)t["sellingPrice"];
+                int austock = (int)t["afterUpdateStock"];
+                int temporaryStock = (int)t["temporaryStock"];
 
 
                 Tuple<int, string> k = new Tuple<int, string>(outletID, barcode);
@@ -325,6 +327,9 @@ namespace HQServer.WebUI.Controllers
                     outletInventory.discountPercentage = discountPercentage;
                     outletInventory.minimumStock = minimumStock;
                     outletInventory.sellingPrice = sellingPrice;
+                    outletInventory.afterUpdateStock = austock;
+                    outletInventory.temporaryStock = temporaryStock;
+
                     _outletInventoryRepo.quickUpdateOutletInventory(outletInventory);
                 }
                 else
@@ -500,7 +505,7 @@ namespace HQServer.WebUI.Controllers
                 values[product.barcode] = 0;
                 foreach (var shop in shops)
                 {
-                    
+
                     if (j == 2)
                         break;
                     j++;
@@ -530,10 +535,10 @@ namespace HQServer.WebUI.Controllers
                     double newPrice;
 
                     {
-                            newPrice = 0;
-                            newPrice = activePrice((double)product.sellingPrice, product.currentStock, product.temporaryStock, product.minimumStock, (double)values[product.barcode], 2);
-                            newPrice = Math.Ceiling(newPrice / 0.05) * 0.05;
-                            priceList.Add(product.barcode.ToString(), newPrice);
+                        newPrice = 0;
+                        newPrice = activePrice((double)product.sellingPrice, product.currentStock, product.temporaryStock, product.minimumStock, (double)values[product.barcode], 2);
+                        newPrice = Math.Ceiling(newPrice / 0.05) * 0.05;
+                        priceList.Add(product.barcode.ToString(), newPrice);
                     }
 
                 }
@@ -543,7 +548,7 @@ namespace HQServer.WebUI.Controllers
             //createBlob(serializer.Serialize(priceList));
 
             var serializer = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue, RecursionLimit = 100 };
-            createBlob(serializer.Serialize(priceList),shopID);
+            createBlob(serializer.Serialize(priceList), shopID);
             return new ContentResult()
             {
                 Content = serializer.Serialize(priceList),
@@ -597,7 +602,7 @@ namespace HQServer.WebUI.Controllers
             // Retrieve a reference to a container. 
             CloudBlobContainer container = blobClient.GetContainerReference("stock");
 
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference("prices"+shopID+".txt");
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference("prices" + shopID + ".txt");
             blockBlob.Properties.ContentType = "application/json";
 
             // Create or overwrite the "myblob" blob with contents from a local file.
